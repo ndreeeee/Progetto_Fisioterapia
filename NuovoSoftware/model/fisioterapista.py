@@ -3,6 +3,7 @@ import tkinter as tk
 from model.utente import Utente
 from model.paziente import Paziente
 from views.fisioterapista_view import FisioterapistaView
+from model.esercizio import Esercizio
 
 
 
@@ -29,6 +30,15 @@ class Fisioterapista(Utente):
             if query.lower() in paziente.nome.lower() or query.lower() in paziente.email.lower()
         ]
         return risultati
+    
+    def aggiungi_nuovo_esercizio (self, titolo, descrizione, video_url):
+        
+        for esercizio in self.lista_esercizi:
+            if esercizio.nome == titolo:
+                messagebox.showerror("Errore", "Questo esercizio è stato già inserito")
+                return      
+        self.lista_esercizi.append(Esercizio(titolo, descrizione,video_url))
+        messagebox.showinfo("Successo", "Esercizio inserito con successo!")
     
     
     

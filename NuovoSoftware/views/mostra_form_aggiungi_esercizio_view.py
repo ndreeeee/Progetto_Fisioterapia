@@ -5,8 +5,10 @@ import tkinter.ttk as ttk
 from tkinter import font, messagebox, simpledialog, filedialog
 
 class MostraFormAggiungiEsercizio:
-    def __init__(self, root):
+    def __init__(self, root, fisioterapista):
         self.root = root
+        self.fisioterapista = fisioterapista
+        self.file_video_path = ""
         
 
         form_window = tk.Toplevel(self.root)
@@ -48,4 +50,17 @@ class MostraFormAggiungiEsercizio:
         
         self.spazio2 = ttk.Label(self.main_frame)
         self.spazio2.pack(expand=True)
+        
+    def carica_file_video(self):
+        file_path = simpledialog.askstring("Carica Video", "Inserisci l'URL del video:")
+        if file_path:
+            self.file_video_path = file_path  
+            self.file_label.config(text=f"Video selezionato: {file_path.split('/')[-1]}")
+        
+        
+    def aggiungi_esercizio (self, titolo, descrizione, video_url, window):
+        if titolo and descrizione:
+            video_url = ""
+        self.fisioterapista.aggiungi_nuovo_esercizio(titolo, descrizione, video_url)        
+        window.destroy()
         
