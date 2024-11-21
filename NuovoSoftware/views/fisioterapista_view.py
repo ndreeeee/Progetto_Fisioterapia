@@ -5,6 +5,7 @@ import tkinter.ttk as ttk
 from tkinter import font, messagebox, simpledialog, filedialog
 from views.cerca_paziente_view import CercaPazienteView
 from views.aggiungi_paziente_view import AggiungiPazienteView
+from views.mostra_lista_esercizi_view import MostraListaEsercizi
 
 
 # width=700, height=600
@@ -34,7 +35,7 @@ class FisioterapistaView(tk.Frame):
         self.aggiungi_paziente_button = ttk.Button(self.main_frame, text="Aggiungi Paziente", command=lambda: AggiungiPazienteView(self.root, fisioterapista), width=20, style='TButton')
         self.aggiungi_paziente_button.pack(pady=20, ipadx=20, ipady=10)
         
-        self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=self.mostra_lista_esercizi, width=20, style='TButton')
+        self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, fisioterapista.lista_esercizi), width=20, style='TButton')
         self.mostra_esercizi_button.pack(pady=20, ipadx=20, ipady=10)
 
         self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=self.mostra_prenotazioni, width=20, style='TButton')
