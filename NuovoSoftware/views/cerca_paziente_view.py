@@ -4,6 +4,7 @@ import tkinter.ttk as ttk
 from tkinter import font, messagebox, simpledialog, filedialog
 
 from views.profilo_paziente_view import ProfiloPaziente
+from views.messaggi_view import MessaggiView
 
 
 # width=700, height=600
@@ -12,6 +13,7 @@ class CercaPazienteView:
         self.root = root
         self.fisioterapista = fisioterapista
         search_window = tk.Toplevel(root)
+        self.flag = flag
         search_window.title("Cerca Paziente")
 
         style = ttk.Style()
@@ -40,8 +42,11 @@ class CercaPazienteView:
 
         self.visualizza_tutti_pazienti(fisioterapista)  
         
-        if flag == 1:
+        if self.flag == 1:
             self.results_listbox.bind("<Double-1>", self.apri_chat_paziente)
+        else:
+            self.results_listbox.bind("<Double-1>", self.apri_profilo_paziente)
+
             
             
         
@@ -50,7 +55,6 @@ class CercaPazienteView:
         for paziente in fisioterapista.lista_pazienti:
             self.results_listbox.insert(tk.END, f"Nome: {paziente.nome}, Email: {paziente.email}")
 
-        self.results_listbox.bind("<Double-1>", self.apri_profilo_paziente)
         
         
    
@@ -72,7 +76,7 @@ class CercaPazienteView:
             else:
                 self.results_listbox.insert(tk.END, "Nessun paziente trovato.")
         else:
-            self.visualizza_tutti_pazienti(self.fisioterapista)  
+            self.visualizza_tutti_pazienti()  
     
     
     def apri_profilo_paziente(self, event):
@@ -86,4 +90,18 @@ class CercaPazienteView:
             email = dati[1].split(": ")[1]  
             paziente = self.fisioterapista.ottieni_paziente(nome, email)
             ProfiloPaziente(self.root, paziente, self.fisioterapista)
+            
+    def apri_chat_paziente(self, event):
+
+        indice_selezionato = self.results_listbox.curselection()
+        if indice_selezionato:
+            
+            testo_selezionato = self.results_listbox.get(indice_selezionato[0])
+
+            dati = testo_selezionato.split(", ")
+            nome = dati[0].split(": ")[1]  
+            email = dati[1].split(": ")[1]  
+            paziente = self.fisioterapista.ottieni_paziente(nome, email)
+            root = tk.Tk() 
+            MessaggiView(root, paziente, self.fisioterapista, 1)
             

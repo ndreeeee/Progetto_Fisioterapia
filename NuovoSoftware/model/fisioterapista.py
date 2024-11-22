@@ -127,6 +127,17 @@ class Fisioterapista(Utente):
                 for esercizio in self.lista_esercizi:
                     if titolo == esercizio.titolo:
                         paziente.remove_esercizio(esercizio)
+                        
+    def elimina_paziente(self, paziente1, finestra_profilo):
+        risposta = messagebox.askyesno("Conferma Eliminazione", "Sei sicuro di voler eliminare questo paziente?")
+        
+        if risposta:
+            for paziente in self.lista_pazienti:
+                if paziente1 == paziente:
+                    self.lista_pazienti.remove(paziente)
+                    finestra_profilo.destroy()
+            
+            messagebox.showinfo("Successo", "Paziente eliminato con successo.")
         
             
        

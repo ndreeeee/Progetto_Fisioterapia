@@ -3,16 +3,18 @@ from tkinter import scrolledtext
 
 import tkinter.ttk as ttk
 from tkinter import font, messagebox, filedialog as fd
+from views.cartella_clinica_paziente_view import CartellaClinicaPaziente
+from views.prenotazione_view import PrenotazioniView
 
 
 
 
 class PazienteView(tk.Frame):
-    def __init__(self, root):  
+    def __init__(self, root, paziente, posti_disponibili):  
         super().__init__(root)  
         self.root = root
-        self.paziente = paziente  
-        self.controller = Paziente(paziente) 
+        self.paziente = paziente
+        self.posti_disponibili = posti_disponibili  
         
         self.main_frame = tk.Frame(self.root, width=900, height=700)
         self.main_frame.pack_propagate(False) 
@@ -32,7 +34,7 @@ class PazienteView(tk.Frame):
         
         titolo_font = font.Font(family="Arial", size=14, weight="bold")
         
-        id_paziente = self.controller.db.ottieni_id_paziente(paziente.email)
+        """
         percentuale = self.controller.db.calcola_percentuale_completamento(id_paziente)
         
         percentuale_label = tk.Label(self.main_frame, text=f"Completamento Terapia: {percentuale:.2f}%", font=titolo_font)
@@ -42,9 +44,12 @@ class PazienteView(tk.Frame):
         progressbar.pack(pady=20)
 
         progressbar['value'] = percentuale
-        
-        self.cartella_clinica_btn = ttk.Button(self.main_frame, text="Cartella Clinica", command=self.mostra_cartella_clinica, width=20, style='TButton')
+        """
+        self.cartella_clinica_btn = ttk.Button(self.main_frame, text="Cartella Clinica", command= lambda: CartellaClinicaPaziente(self.root, self.paziente), width=20, style='TButton')
         self.cartella_clinica_btn.pack(pady=20, ipadx=20, ipady=10)
+        
+        self.messaggi_btn = ttk.Button(self.main_frame, text="Prenotazione", command=lambda: PrenotazioniView(self.root, self.paziente, self.posti_disponibili), width=20, style='TButton')
+        self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
 
         self.esercizi_btn = ttk.Button(self.main_frame, text="Esercizi", command=self.mostra_esercizi, width=20, style='TButton')
         self.esercizi_btn.pack(pady=20, ipadx=20, ipady=10)
@@ -52,8 +57,7 @@ class PazienteView(tk.Frame):
         self.messaggi_btn = ttk.Button(self.main_frame, text="Messaggi", command=self.mostra_messaggi, width=20, style='TButton')
         self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
         
-        self.messaggi_btn = ttk.Button(self.main_frame, text="Prenotazione", command=self.apri_prenotazioni, width=20, style='TButton')
-        self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
+        
         
         style = ttk.Style()
         style.configure('TButton', font=button_font)  

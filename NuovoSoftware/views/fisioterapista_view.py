@@ -37,12 +37,14 @@ class FisioterapistaView(tk.Frame):
         
         self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, fisioterapista), width=20, style='TButton')
         self.mostra_esercizi_button.pack(pady=20, ipadx=20, ipady=10)
+        
+        self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, fisioterapista), width=20, style='TButton')
+        self.messaggia_paziente_button.pack(pady=20, ipadx=20, ipady=10)
 
         self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=self.mostra_prenotazioni, width=20, style='TButton')
         self.prenotazione_button.pack(pady=20, ipadx=20, ipady=10)
         
-        self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: self.mostra_form_cerca_paziente(1), width=20, style='TButton')
-        self.messaggia_paziente_button.pack(pady=20, ipadx=20, ipady=10)
+
         
         self.esegui_backup_ = ttk.Button(self.main_frame, text="Esegui Backup", command=self.controller.esegui_backup, width=20, style='TButton')
         self.esegui_backup_.pack(pady=20, ipadx=20, ipady=10)

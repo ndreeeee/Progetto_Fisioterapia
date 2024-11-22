@@ -56,7 +56,7 @@ class ProfiloPaziente:
         
                     # Pulsante per eliminare il paziente
         ttk.Button(profilo_paziente_window, text="Elimina Paziente", 
-                command=lambda: self.elimina_paziente(id_paziente, search_frame), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: self.fisioterapista.elimina_paziente(self.paziente, search_frame), style="TButton").pack(pady=20, ipadx=20, ipady=10)
 
         # Pulsante per tornare indietro
         ttk.Button(profilo_paziente_window, text="Torna Indietro", 
@@ -67,22 +67,7 @@ class ProfiloPaziente:
         self.spazio2 = ttk.Label(profilo_paziente_window)
         self.spazio2.pack(expand=True)
             
-    def elimina_paziente(self, id_paziente, finestra_profilo):
-        risposta = messagebox.askyesno("Conferma Eliminazione", "Sei sicuro di voler eliminare questo paziente?")
-        
-        if risposta:
-            # Rimuove il paziente dal database
-            self.controller.elimina_paziente(id_paziente)
-            self.visualizza_tutti_pazienti()  # Ricarica la lista dei pazienti
 
-            
-            # Chiude la finestra del profilo
-            finestra_profilo.destroy()
-
-            
-            # Rimuove il paziente dalla listbox principale (aggiorna l'interfaccia)
-            
-            messagebox.showinfo("Successo", "Paziente eliminato con successo.")
     
     def aggiorna_ricerca(self, event):
     # Funzione per aggiornare i risultati della ricerca dinamica

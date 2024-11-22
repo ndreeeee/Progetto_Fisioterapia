@@ -3,13 +3,22 @@ from datetime import date
 import sqlite3
 
 class Messaggio():
-    def __init__(self, codice, data_invio, descrizione, destinatario, mittente):
-        self.codice=codice
+    
+    _id_counter = 1
+    
+    def __init__(self, data_invio, descrizione, destinatario, mittente):
+        
+        self.codice=Messaggio._id_counter
+        Messaggio._id_counter += 1
+        
         self.data_invio=data_invio
         self.descrizione=descrizione
         self.destinatario=destinatario
         self.mittente=mittente
     
+    
+    
+    """
     def to_dict(self):
         return {
             "codice": self.codice,
@@ -81,4 +90,4 @@ class Messaggio():
             })
         
         return lista_messaggi
-    
+    """
