@@ -49,21 +49,10 @@ class MostraListaEsercizi:
             self.esercizi_data = {}  
             
             for esercizio in esercizi:
-                
-                """
-                id_esercizio = esercizio[0]  
-                titolo = esercizio[1]
-                descrizione = esercizio[2]
-                    """
           
                 self.listbox.insert(tk.END, f"{esercizio.titolo}")
                 
-                """                # Memorizza le informazioni degli esercizi nel dizionario
-                self.esercizi_data[id_esercizio] = {
-                    "titolo": titolo,
-                    "descrizione": descrizione,
-                    "video_url": esercizio[3]  
-                }"""
+            
 
 
         self.listbox.bind("<Double-1>", lambda event: self.mostra_dettagli_esercizio(self.listbox, self.esercizi_data, event))
@@ -84,12 +73,41 @@ class MostraListaEsercizi:
     def cerca_esercizi(self, event=None):
         
         search_text = self.search_entry.get().lower()
+        if search_text:
+            
+            risultati = self.fisioterapista.cerca_esercizio(search_text)
+            self.listbox.delete(0, tk.END)
         
-        self.listbox.delete(0, tk.END)
-        
-        for id_esercizio, info in self.esercizi_data.items():
-            if search_text in info['titolo'].lower():  
-                self.listbox.insert(tk.END, f"{id_esercizio}: {info['titolo']}")
+            if risultati:
+                for esercizio in risultati:
+                    try:
+                        self.listbox.insert(tk.END, f"{esercizio.titolo}")
+                    except KeyError:
+                        self.listbox.insert(tk.END, f"Ricerca non valida")
+            else:
+                self.listbox.insert(tk.END, f"Nessun Esercizio trovato")
+        else:
+            self.listbox.delete(0,tk.END)
+
+            for esercizio in self.fisioterapista.lista_esercizi:
+                self.listbox.insert(tk.END, f"{esercizio.titolo}")
+
+    def rimuovi_esercizio_lista(self, listbox):
+            selezione = self.listbox.curselection()
+            if selezione:
+                indice = selezione[0]
+                esercizio = listbox.get(indice)
+            
+
+                
+                conferma = messagebox.askyesno("Conferma", f"Sei sicuro di voler eliminare l'esercizio '{esercizio}'?")
+                if conferma:
+                    self.fisioterapista.elimina_esercizio(esercizio)
+
+                    self.listbox.delete(indice)
+            else:
+                messagebox.showerror("Errore", "Seleziona un esercizio da eliminare.")
+            
                 
     def mostra_dettagli_esercizio(self, listbox, esercizi_data, event):
             
@@ -97,12 +115,9 @@ class MostraListaEsercizi:
                 selezione = listbox.curselection()  
                 if selezione:
                     indice = selezione[0]  
-                    esercizio_selezionato = listbox.get(indice) 
+                    esercizio = listbox.get(indice) 
+                    ex_dettagli = self.fisioterapista.ottieni_esercizio(esercizio)
                     
-                    id_esercizio = int(esercizio_selezionato.split(":")[0])
-
-                    dettagli_esercizio = esercizi_data[id_esercizio]
-
-                    VisualizzaDettagliEsercizio(dettagli_esercizio, id_esercizio)
+                    VisualizzaDettagliEsercizio(ex_dettagli, self.root, self.fisioterapista)
             except Exception as e:
                 print(f"Errore durante la visualizzazione dei dettagli dell'esercizio: {e}")

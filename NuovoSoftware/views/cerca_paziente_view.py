@@ -3,10 +3,13 @@ from tkinter import scrolledtext
 import tkinter.ttk as ttk
 from tkinter import font, messagebox, simpledialog, filedialog
 
+from views.profilo_paziente_view import ProfiloPaziente
+
 
 # width=700, height=600
-class CercaPazienteView(tk.Frame):
+class CercaPazienteView:
     def __init__(self, flag, root, fisioterapista):
+        self.root = root
         self.fisioterapista = fisioterapista
         search_window = tk.Toplevel(root)
         search_window.title("Cerca Paziente")
@@ -44,7 +47,7 @@ class CercaPazienteView(tk.Frame):
         
     def visualizza_tutti_pazienti(self, fisioterapista):
         self.results_listbox.delete(0, tk.END)
-        for paziente in self.fisioterapista.lista_pazienti:
+        for paziente in fisioterapista.lista_pazienti:
             self.results_listbox.insert(tk.END, f"Nome: {paziente.nome}, Email: {paziente.email}")
 
         self.results_listbox.bind("<Double-1>", self.apri_profilo_paziente)
@@ -70,3 +73,17 @@ class CercaPazienteView(tk.Frame):
                 self.results_listbox.insert(tk.END, "Nessun paziente trovato.")
         else:
             self.visualizza_tutti_pazienti(self.fisioterapista)  
+    
+    
+    def apri_profilo_paziente(self, event):
+        indice_selezionato = self.results_listbox.curselection()
+        if indice_selezionato:
+            
+            testo_selezionato = self.results_listbox.get(indice_selezionato[0])
+
+            dati = testo_selezionato.split(", ")
+            nome = dati[0].split(": ")[1]  
+            email = dati[1].split(": ")[1]  
+            paziente = self.fisioterapista.ottieni_paziente(nome, email)
+            ProfiloPaziente(self.root, paziente, self.fisioterapista)
+            

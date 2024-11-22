@@ -8,7 +8,7 @@ class MostraFormAggiungiEsercizio:
     def __init__(self, root, fisioterapista):
         self.root = root
         self.fisioterapista = fisioterapista
-        self.file_video_path = ""
+        self.file_video_path = "Nessun video inserito"
         
 
         form_window = tk.Toplevel(self.root)
@@ -37,7 +37,7 @@ class MostraFormAggiungiEsercizio:
         self.upload_button = ttk.Button(self.main_frame, text="Carica un Video", command=self.carica_file_video)
         self.upload_button.pack(pady=20, ipadx=10, ipady=5)
 
-        self.file_label = ttk.Label(self.main_frame, text="Nessun file selezionato", font=("Arial", 12)).pack(pady=5)
+        self.file_label = ttk.Label(self.main_frame, text= self.file_video_path, font=("Arial", 12)).pack(pady=5)
         
         submit_button = ttk.Button(self.main_frame, text="Aggiungi Esercizio", 
                                   command=lambda: self.aggiungi_esercizio(titolo_entry.get(), 
@@ -55,12 +55,12 @@ class MostraFormAggiungiEsercizio:
         file_path = simpledialog.askstring("Carica Video", "Inserisci l'URL del video:")
         if file_path:
             self.file_video_path = file_path  
-            self.file_label.config(text=f"Video selezionato: {file_path.split('/')[-1]}")
         
         
     def aggiungi_esercizio (self, titolo, descrizione, video_url, window):
         if titolo and descrizione:
-            video_url = ""
+            if not video_url:
+                video_url = ""
         self.fisioterapista.aggiungi_nuovo_esercizio(titolo, descrizione, video_url)        
         window.destroy()
         

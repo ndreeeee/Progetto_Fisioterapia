@@ -5,11 +5,14 @@ import tkinter.ttk as ttk
 from tkinter import font, messagebox, simpledialog, filedialog
 
 class VisualizzaDettagliEsercizio:
-    def init (self, dettagli, id_esercizio):
-        
+    def __init__ (self, esercizio, root, fisioterapista):
+        self.esercizio = esercizio
+        self.file_video_path = ""
+        self.root = root
+        self.fisioterapista = fisioterapista
         
         dettagli_window = tk.Toplevel(self.root)
-        dettagli_window.title(f"Dettagli Esercizio: {dettagli['titolo']}")
+        dettagli_window.title(f"Dettagli Esercizio: {esercizio.titolo}")
         dettagli_window.geometry("1000x800")  
 
         titolo_font = font.Font(family="Arial", size=14, weight="bold")
@@ -18,7 +21,7 @@ class VisualizzaDettagliEsercizio:
         titolo_label = tk.Label(dettagli_window, text="Titolo:", font=titolo_font, bg="#f0f0f0")
         titolo_label.pack(pady=10)
         titolo_entry = tk.Entry(dettagli_window, font=testo_font, width=60)
-        titolo_entry.insert(0, dettagli['titolo'])
+        titolo_entry.insert(0, esercizio.titolo)
         titolo_entry.pack(pady=10)
 
         descrizione_label = tk.Label(dettagli_window, text="Descrizione:", font=titolo_font, bg="#f0f0f0")
@@ -26,15 +29,15 @@ class VisualizzaDettagliEsercizio:
 
         descrizione_text = tk.Text(dettagli_window,height=15, width=80, font=testo_font, bg="#ffffff", fg="#333333")
         descrizione_text.pack(pady=10)
-        descrizione_text.insert(tk.END, dettagli['descrizione'])
+        descrizione_text.insert(tk.END, esercizio.descrizione)
         
         video_url_label = tk.Label(dettagli_window, fg="blue", cursor="hand2")
         video_url_label.pack(pady=10)
     
         # Mostra l'URL del video se disponibile
-        if dettagli['video_url']:
-            video_url_label.config(text=f"Video URL: {dettagli['video_url']}")
-            video_url_label.bind("<Button-1>", lambda e: self.apri_url(dettagli['video_url']))
+        if esercizio.video:
+            video_url_label.config(text=f"Video URL: {esercizio.video}")
+            video_url_label.bind("<Button-1>", lambda e: self.apri_url(esercizio.video))
         
         def carica_video():
             video_dialog = tk.Toplevel(dettagli_window)
@@ -66,8 +69,8 @@ class VisualizzaDettagliEsercizio:
             nuovo_titolo = titolo_entry.get()
             nuova_descrizione = descrizione_text.get("1.0", tk.END).strip()  
 
-            if nuovo_titolo != dettagli['titolo'] or nuova_descrizione != dettagli['descrizione'] or self.file_video_path != dettagli['video_url']:
-                self.controller.modifica_esercizio(nuovo_titolo, nuova_descrizione, id_esercizio, self.file_video_path)
+            if nuovo_titolo != esercizio.titolo or nuova_descrizione != esercizio.descrizione or self.file_video_path != esercizio.video:
+                self.fisioterapista.modifica_esercizio(nuovo_titolo, nuova_descrizione, self.file_video_path, esercizio)
                 dettagli_window.destroy() 
             else:
                 messagebox.showerror("Nessuna modifica da salvare.")
@@ -79,3 +82,7 @@ class VisualizzaDettagliEsercizio:
         back_button = tk.Button(dettagli_window, text="Torna Indietro", command=dettagli_window.destroy,
                                 bg="#f44336", fg="white", font=testo_font, bd=0, relief="flat", padx=20, pady=10)
         back_button.pack(pady=10)
+        
+    def apri_url(self, url):
+        import webbrowser
+        webbrowser.open(url)
