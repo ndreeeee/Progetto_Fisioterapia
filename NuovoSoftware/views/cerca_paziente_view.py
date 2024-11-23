@@ -12,7 +12,7 @@ class CercaPazienteView:
     def __init__(self, flag, root, fisioterapista):
         self.root = root
         self.fisioterapista = fisioterapista
-        search_window = tk.Toplevel(root)
+        search_window = tk.Toplevel(self.root)
         self.flag = flag
         search_window.title("Cerca Paziente")
 

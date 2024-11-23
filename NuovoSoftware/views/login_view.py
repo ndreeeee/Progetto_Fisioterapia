@@ -6,14 +6,12 @@ from tkinter import messagebox
 from model.prenotazione import GestorePrenotazioni
 
 
-utenti_registrati = [
-            Fisioterapista("Mario Rossi", "dottor.rossi@email.com", "password123"),
-            Paziente ("Marco Bianchi", "marco@email.com", "password123")
-                ]
+
 class LoginView:
-    def __init__(self, root):
+    def __init__(self, root, lista_utenti):
         self.root = root
         self.root.title("Login")
+        self.lista_utenti = lista_utenti
 
         self.root.configure(bg="#f4f4f4")
         
@@ -85,7 +83,10 @@ class LoginView:
         email = self.email_entry.get()
         password = self.password_entry.get()
         
-        for utente in utenti_registrati:
+        fisioterapista = [utente for utente in self.lista_utenti if isinstance(utente, Fisioterapista)]
+
+        
+        for utente in self.lista_utenti:
             if utente.email == email and utente.password == password:
                 self.root.destroy()  # Chiude la finestra di login
                 root = tk.Tk()  
@@ -96,7 +97,7 @@ class LoginView:
 
                 elif isinstance(utente, Paziente):
                     from views.paziente_view import PazienteView
-                    PazienteView(root, utente, self.posti_disponibili)  # Passa l'oggetto paziente
+                    PazienteView(root, utente, fisioterapista, self.posti_disponibili)  # Passa l'oggetto paziente
                 return
         messagebox.showerror("Errore", "Credenziali errate. Riprova.")
             

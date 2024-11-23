@@ -26,9 +26,11 @@ class MessaggiView:
         
         button_font = ("Arial", 14, "bold")  
      
+        messaggi_window = tk.Toplevel(self.root)
+        messaggi_window.title("Chat")
+        messaggi_window.geometry("900x700")
 
-
-        self.main_frame = tk.Frame(self.root, width=900, height=700, bg="#f0f0f0")
+        self.main_frame = tk.Frame(messaggi_window, width=900, height=700, bg="#f0f0f0")
         self.main_frame.pack_propagate(False)
         self.main_frame.pack(padx=20, pady=20)
 
@@ -85,28 +87,26 @@ class MessaggiView:
 
         self.carica_messaggi(self.fisioterapista, self.paziente)
 
-    """
+    
     def invia_messaggio(self, flag):
-        testo = self.input_text.get()
-
-        if testo.strip():  
-            if flag == 1:
-                self.controller.invia_messaggio(self.fisioterapista_id, self.paziente_id, testo)
-            else:
-                self.controller.invia_messaggio(self.paziente_id, self.fisioterapista_id, testo)
-
+        try:
+            testo = self.input_text.get().strip()
+            if not testo:
+                print("Nessun testo inserito.")
+                return
             
+            self.fisioterapista.invia_messaggio(self.fisioterapista, self.paziente, testo)
+            self.input_text.delete(0, tk.END)  # Pulisce l'area di input dopo l'invio
 
+            print("Messaggio inviato. Ricarico i messaggi...")
+            self.carica_messaggi(self.fisioterapista, self.paziente)  # Aggiorna la chat
+        except Exception as e:
+            print(f"Errore durante l'invio del messaggio: {e}")
 
-            self.input_text.delete(0, tk.END)
-
-            self.carica_messaggi()
-    """
 
     def carica_messaggi(self, fisioterapista, paziente):
-        """Carica e visualizza i messaggi nella chat."""
-        
-
+        from model.fisioterapista import Fisioterapista
+        from model.paziente import Paziente
         self.chat_area.config(state='normal')
         self.chat_area.delete(1.0, tk.END)
 
@@ -115,14 +115,14 @@ class MessaggiView:
 
         for messaggio in messaggi:
             
-            if isinstance(messaggio.mittente, fisioterapista):
+            if isinstance(messaggio.mittente, Fisioterapista):
                 self.chat_area.insert(tk.END, f"{fisioterapista.nome} ({messaggio.data_invio}): {messaggio.descrizione}\n")
-            if isinstance(messaggio.mittente, paziente):
+            if isinstance(messaggio.mittente, Paziente):
                 self.chat_area.insert(tk.END, f"{paziente.nome} ({messaggio.data_invio}): {messaggio.descrizione}\n")
 
         self.chat_area.config(state='disabled')
 
-        self.root.after(5000, self.carica_messaggi)
+        self.root.after(5000, lambda: self.carica_messaggi(self.fisioterapista, self.paziente))
 
 
 

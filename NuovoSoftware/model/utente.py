@@ -1,5 +1,7 @@
 from tkinter import messagebox
 import tkinter as tk
+from model.messaggio import Messaggio
+from database import Database
 
 
 
@@ -17,6 +19,10 @@ class Utente:
         self.email = email
         self.password = password
         
+    def invia_messaggio(self, mittente, destinatario, testo):
+        Messaggio(testo, destinatario, mittente)
+        db = Database()
+        db.salva_messaggio(mittente.codice, destinatario.codice, testo)
         
       
 

@@ -76,43 +76,95 @@ class Database:
         
     def ottieni_messaggi(self, fisioterapista, paziente):
         from model.messaggio import Messaggio
-        from model.paziente import Paziente
-        from model.fisioterapista import Fisioterapista
+        
+        
+        # Recupera tutti i messaggi dal DB
         self.cursor.execute("SELECT * FROM messaggi")
-        rows=self.cursor.fetchall()
-        messaggi = []
-            
-        for row in rows:
-            self.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[2],))  
-            mittente = self.cursor.fetchone()
-            
-            self.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[3],))  
-            destinatario = self.cursor.fetchone()
-            
-        if mittente[3] == 'Fisioterapista':
-            mittente_obj = Fisioterapista(mittente[0], mittente[1], mittente[2], mittente[4])
-        else:
-            mittente_obj = Paziente(mittente[0], mittente[1], mittente[2], mittente[5])
-        
-        if destinatario[3] == 'Fisioterapista':
-            destinatario_obj = Fisioterapista(destinatario[0], destinatario[1], destinatario[2], destinatario[4])
-        else:
-            destinatario_obj = Paziente(destinatario[0], destinatario[1], destinatario[2], destinatario[5])
-        
-        messaggio = Messaggio(row[1], mittente_obj, destinatario_obj, row[4])
-        
-        messaggi_filtrati = []
+        rows = self.cursor.fetchall()
 
-        for messaggio in messaggi:
-            # Controlla se il fisioterapista e il paziente sono mittente e destinatario (o viceversa)
-            if (messaggio.mittente == fisioterapista and messaggio.destinatario == paziente) or \
-            (messaggio.mittente == paziente and messaggio.destinatario == fisioterapista):
-                messaggi_filtrati.append(messaggio)
-        messaggi.append(messaggio)
         
-        self.conn.close()
-        pass
-        return messaggi
+        messaggi = []
+        
+        for row in rows:
+            # Recupera il mittente
+            self.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[1],))  # mittente_id
+            
+            # Recupera il destinatario
+            self.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[2],))  # destinatario_id
+            destinatario = self.cursor.fetchone()
+             
+            if destinatario[4] == 'fisioterapista':
+                messaggio = Messaggio(row[3], fisioterapista, paziente, row[4])  
+                messaggi.append(messaggio)            
+            else:
+                messaggio = Messaggio(row[3], paziente, fisioterapista, row[4])  
+                messaggi.append(messaggio)            
+            
+
+        
+            # Filtra i messaggi rilevanti tra fisioterapista e paziente
+        messaggi_filtrati = [
+            m for m in messaggi
+            if (m.mittente == fisioterapista and m.destinatario == paziente) or
+            (m.mittente == paziente and m.destinatario == fisioterapista)
+        ]
+
+        return messaggi_filtrati
+
+        
+    def salva_messaggio(self, mittente, destinatario, testo):
+        self.cursor.execute('''
+                INSERT INTO messaggi (mittente_id, destinatario_id, messaggio)
+                VALUES (?, ?, ?)
+            ''', (mittente, destinatario, testo))
+        self.conn.commit()
+
+        
+    def aggiungi_utente(self, nome, email, password, tipo):
+       
+        try:
+            # Controllo validità del tipo
+            if tipo not in ('fisioterapista', 'paziente'):
+                raise ValueError("Tipo utente non valido. Deve essere 'fisioterapista' o 'paziente'.")
+            
+            # Inserimento nel database
+            self.cursor.execute('''
+                INSERT INTO utenti (nome, email, password, tipo)
+                VALUES (?, ?, ?, ?)
+            ''', (nome, email, password, tipo))
+            self.conn.commit()
+            print(f"Utente {nome} aggiunto con successo come {tipo}.")
+        except sqlite3.IntegrityError as e:
+            print(f"Errore: L'email '{email}' è già utilizzata.")
+        except ValueError as ve:
+            print(f"Errore: {ve}")
+        except sqlite3.Error as e:
+            print(f"Errore durante l'aggiunta dell'utente: {e}")
+            
+    def carica_utenti(self):
+        from model.fisioterapista import Fisioterapista
+        from model.paziente import Paziente
+        self.cursor.execute("SELECT * FROM utenti")
+        rows = self.cursor.fetchall()
+        utenti = []
+
+        for row in rows:
+            # Crea l'oggetto utente in base al tipo
+            if row[4] == 'fisioterapista':
+                utente = Fisioterapista(row[1], row[2], row[3])
+            elif row[4] == 'paziente':
+                utente = Paziente(row[1], row[2], row[3])
+
+            utenti.append(utente)
+        
+        return utenti
+    
+        
+            
+    
+        
+
+
         
         
 
