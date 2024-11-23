@@ -83,8 +83,10 @@ class LoginView:
         email = self.email_entry.get()
         password = self.password_entry.get()
         
-        fisioterapista = [utente for utente in self.lista_utenti if isinstance(utente, Fisioterapista)]
-
+        for utente in self.lista_utenti:
+            if (isinstance(utente, Fisioterapista)):
+                fisioterapista = utente
+        
         
         for utente in self.lista_utenti:
             if utente.email == email and utente.password == password:

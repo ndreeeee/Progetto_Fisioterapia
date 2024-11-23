@@ -2,7 +2,6 @@ from tkinter import messagebox
 import tkinter as tk
 from model.utente import Utente
 from model.paziente import Paziente
-from views.fisioterapista_view import FisioterapistaView
 from model.esercizio import Esercizio
 from model.cartella_clinica import CartellaClinica
 
@@ -16,7 +15,6 @@ class Fisioterapista(Utente):
         self.lista_esercizi = []
         self.lista_prenotazioni = []
         
-        esempio = Paziente ("Marco Bianchi", "marco@email.com", "password123")
         
         esercizio1 = Esercizio ("salti con la corda", "descrizione", "")
         es2 = Esercizio ("Panca piana", "description", "")
@@ -24,7 +22,6 @@ class Fisioterapista(Utente):
         self.lista_esercizi.append(es2)
         self.lista_esercizi.append(esercizio1)
 
-        self.lista_pazienti.append(esempio)
         
     def aggiungi_paziente(self, nome, email, password, window):
         if nome and email and password:

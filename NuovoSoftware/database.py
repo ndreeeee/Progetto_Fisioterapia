@@ -86,10 +86,7 @@ class Database:
         messaggi = []
         
         for row in rows:
-            # Recupera il mittente
-            self.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[1],))  # mittente_id
             
-            # Recupera il destinatario
             self.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[2],))  # destinatario_id
             destinatario = self.cursor.fetchone()
              
@@ -98,7 +95,10 @@ class Database:
                 messaggi.append(messaggio)            
             else:
                 messaggio = Messaggio(row[3], paziente, fisioterapista, row[4])  
-                messaggi.append(messaggio)            
+                messaggi.append(messaggio)     
+                
+             
+          
             
 
         

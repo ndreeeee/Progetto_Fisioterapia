@@ -26,11 +26,9 @@ class MessaggiView:
         
         button_font = ("Arial", 14, "bold")  
      
-        messaggi_window = tk.Toplevel(self.root)
-        messaggi_window.title("Chat")
-        messaggi_window.geometry("900x700")
+     
 
-        self.main_frame = tk.Frame(messaggi_window, width=900, height=700, bg="#f0f0f0")
+        self.main_frame = tk.Frame(self.root, width=900, height=700, bg="#f0f0f0")
         self.main_frame.pack_propagate(False)
         self.main_frame.pack(padx=20, pady=20)
 
@@ -95,7 +93,11 @@ class MessaggiView:
                 print("Nessun testo inserito.")
                 return
             
-            self.fisioterapista.invia_messaggio(self.fisioterapista, self.paziente, testo)
+            if flag == 1:
+                self.fisioterapista.invia_messaggio(self.fisioterapista, self.paziente, testo)
+            else:
+                self.paziente.invia_messaggio(self.paziente, self.fisioterapista, testo)
+                
             self.input_text.delete(0, tk.END)  # Pulisce l'area di input dopo l'invio
 
             print("Messaggio inviato. Ricarico i messaggi...")

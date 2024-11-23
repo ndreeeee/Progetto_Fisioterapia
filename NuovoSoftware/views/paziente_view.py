@@ -12,7 +12,8 @@ from database import Database
 
 
 class PazienteView(tk.Frame):
-    def __init__(self, root, paziente, fisioterapista, posti_disponibili):  
+    def __init__(self, root, paziente, fisioterapista, posti_disponibili): 
+        super().__init__(root)  
         self.root = root
         self.paziente = paziente
         self.posti_disponibili = posti_disponibili  
@@ -47,13 +48,15 @@ class PazienteView(tk.Frame):
 
         progressbar['value'] = percentuale
         """
+        
+
         self.cartella_clinica_btn = ttk.Button(self.main_frame, text="Cartella Clinica", command= lambda: CartellaClinicaPaziente(self.root, self.paziente), width=20, style='TButton')
         self.cartella_clinica_btn.pack(pady=20, ipadx=20, ipady=10)
         
         self.messaggi_btn = ttk.Button(self.main_frame, text="Prenotazione", command=lambda: PrenotazioniView(self.root, self.paziente, self.posti_disponibili), width=20, style='TButton')
         self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
         
-        self.messaggi_btn = ttk.Button(self.main_frame, text="Messaggi", command=lambda: MessaggiView(self.root, paziente, self.fisioterapista, 0), width=20, style='TButton')
+        self.messaggi_btn = ttk.Button(self.main_frame, text="Messaggi", command=lambda: MessaggiView(tk.Tk(), paziente, self.fisioterapista, 0), width=20, style='TButton')
         self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
 
         #self.esercizi_btn = ttk.Button(self.main_frame, text="Esercizi", command=self.mostra_esercizi, width=20, style='TButton')
