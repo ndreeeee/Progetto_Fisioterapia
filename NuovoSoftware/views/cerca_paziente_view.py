@@ -40,7 +40,7 @@ class CercaPazienteView:
         back_button = ttk.Button(search_frame, text="Torna Indietro", command=search_window.destroy, style="TButton")
         back_button.pack(pady=20, ipadx=10, ipady=5)  
 
-        self.visualizza_tutti_pazienti(fisioterapista)  
+        self.visualizza_tutti_pazienti(self.fisioterapista)  
         
         if self.flag == 1:
             self.results_listbox.bind("<Double-1>", self.apri_chat_paziente)
@@ -76,7 +76,7 @@ class CercaPazienteView:
             else:
                 self.results_listbox.insert(tk.END, "Nessun paziente trovato.")
         else:
-            self.visualizza_tutti_pazienti()  
+            self.visualizza_tutti_pazienti(self.fisioterapista)  
     
     
     def apri_profilo_paziente(self, event):

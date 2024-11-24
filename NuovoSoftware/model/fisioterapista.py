@@ -21,6 +21,8 @@ class Fisioterapista(Utente):
         
         self.lista_esercizi.append(es2)
         self.lista_esercizi.append(esercizio1)
+        
+   
 
         
     def aggiungi_paziente(self, nome, email, password, window):

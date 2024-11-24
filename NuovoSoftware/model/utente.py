@@ -5,6 +5,7 @@ from database import Database
 
 
 
+
 class Utente:
     
     _id_counter = 1 
@@ -24,6 +25,9 @@ class Utente:
         db = Database()
         db.salva_messaggio(mittente.codice, destinatario.codice, testo)
         
+
+        
+
       
 
 

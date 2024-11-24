@@ -90,16 +90,17 @@ class LoginView:
         
         for utente in self.lista_utenti:
             if utente.email == email and utente.password == password:
-                self.root.destroy()  # Chiude la finestra di login
+                self.root.destroy()  
                 root = tk.Tk()  
+                
                 
                 if isinstance(utente, Fisioterapista):
                     from views.fisioterapista_view import FisioterapistaView
-                    FisioterapistaView(root, utente)  # Passa l'oggetto fisioterapista
+                    FisioterapistaView(root, utente)  
 
                 elif isinstance(utente, Paziente):
                     from views.paziente_view import PazienteView
-                    PazienteView(root, utente, fisioterapista, self.posti_disponibili)  # Passa l'oggetto paziente
+                    PazienteView(root, utente, fisioterapista, self.posti_disponibili)  
                 return
         messagebox.showerror("Errore", "Credenziali errate. Riprova.")
             

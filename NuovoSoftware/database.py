@@ -156,6 +156,7 @@ class Database:
                 utente = Paziente(row[1], row[2], row[3])
 
             utenti.append(utente)
+            print(utente)
         
         return utenti
     

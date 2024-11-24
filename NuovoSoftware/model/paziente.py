@@ -13,7 +13,8 @@ class Paziente(Utente):
         self.esercizi_assegnati = []
         self.prenotazioni = []
         self.cartella_clinica = None
-        
+    
+  
        
         
         
