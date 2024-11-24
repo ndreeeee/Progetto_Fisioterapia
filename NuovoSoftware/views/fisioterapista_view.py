@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 from views.cerca_paziente_view import CercaPazienteView
 from views.aggiungi_paziente_view import AggiungiPazienteView
 from views.mostra_lista_esercizi_view import MostraListaEsercizi
+from views.prenotazioni_fisio_view import PrenotazioniFisio
 
 
 # width=700, height=600
@@ -38,7 +39,7 @@ class FisioterapistaView(tk.Frame):
         self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, self.fisioterapista), width=20, style='TButton')
         self.messaggia_paziente_button.pack(pady=20, ipadx=20, ipady=10)
 
-        self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=self.mostra_prenotazioni, width=20, style='TButton')
+        self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=lambda: PrenotazioniFisio(self.root, self.fisioterapista), width=20, style='TButton')
         self.prenotazione_button.pack(pady=20, ipadx=20, ipady=10)
         
 

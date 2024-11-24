@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from datetime import datetime, timedelta
-from model.prenotazione import Prenotazione
+from database import Database
 import tkinter.ttk as ttk
 
 
@@ -19,6 +18,8 @@ class PrenotazioniView(tk.Toplevel):
         
         self.paziente = paziente
         self.posti_prenotati = paziente.get_prenotazioni()
+        
+        
 
         self.prenotazioni_effettuate_lista = ttk.Treeview(self, columns=("ID", "Data e Ora", "Stato"), show="headings")
         self.prenotazioni_effettuate_lista.heading("ID", text="ID")
@@ -91,14 +92,10 @@ class PrenotazioniView(tk.Toplevel):
             messagebox.showerror("Errore", "Prenotazione non trovata!")
             return
 
-        # Esegui la prenotazione
         try:
             self.paziente.prenota(prenotazione_da_prenotare)
-            
-            # Aggiorna le liste
             self.posti_disponibili.remove(prenotazione_da_prenotare)
             
-            # Aggiorna le visualizzazioni
             self.carica_prenotazioni_disponibili(self.posti_disponibili)
             self.carica_prenotazioni_effettuate(self.posti_prenotati)
 

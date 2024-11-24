@@ -1,8 +1,7 @@
 import tkinter as tk
-
-from tkinter import scrolledtext  
 import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
+
+from database import Database
     
 class ModificaPaziente:
     def __init__(self, root, paziente, fisioterapista):
@@ -17,6 +16,7 @@ class ModificaPaziente:
         modify_frame.pack_propagate(False)
         modify_frame.pack(pady=20, padx=20)  
 
+        db = Database()
 
         ttk.Label(modify_frame, text="Nome Paziente", font=("Arial", 16)).pack(pady=5)
         nome_entry = ttk.Entry(modify_frame, font=("Arial", 14), width=70)
@@ -34,7 +34,8 @@ class ModificaPaziente:
 
        
         submit_button = ttk.Button(modify_frame, text="Salva Modifiche", 
-                                command=lambda: self.fisioterapista.modifica_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), modify_window, self.paziente),
+                                command=lambda: (db.modifica_paziente(self.paziente, nome_entry.get(), email_entry.get(), password_entry.get()), 
+                                                 self.fisioterapista.modifica_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), modify_window, self.paziente)),
                                 style="TButton")
         submit_button.pack(pady=15, ipadx=10, ipady=5)
 

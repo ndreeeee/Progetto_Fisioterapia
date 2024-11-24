@@ -4,6 +4,7 @@ from model.fisioterapista import Fisioterapista
 from model.paziente import Paziente
 from tkinter import messagebox
 from model.prenotazione import GestorePrenotazioni
+from database import Database
 
 
 
@@ -16,6 +17,8 @@ class LoginView:
         self.root.configure(bg="#f4f4f4")
         
         gestore = GestorePrenotazioni()
+        db = Database()
+        gestore.prenotazioni = db.carica_prenotazioni()
         gestore.aggiorna_prenotazioni_future()
         self.posti_disponibili = gestore.get_prenotazioni_disponibili()
         self.posti_prenotati = gestore.get_posti_prenotati()
@@ -82,10 +85,16 @@ class LoginView:
     def login(self):
         email = self.email_entry.get()
         password = self.password_entry.get()
+        lista_pazienti = []
         
         for utente in self.lista_utenti:
             if (isinstance(utente, Fisioterapista)):
                 fisioterapista = utente
+                continue
+                
+            lista_pazienti.append(utente)
+            fisioterapista.lista_pazienti = lista_pazienti
+            fisioterapista.lista_prenotazioni = self.posti_prenotati
         
         
         for utente in self.lista_utenti:

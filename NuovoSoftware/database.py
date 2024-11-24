@@ -1,4 +1,5 @@
 import sqlite3
+from tkinter import messagebox
 
 
 class Database:
@@ -156,9 +157,55 @@ class Database:
                 utente = Paziente(row[1], row[2], row[3])
 
             utenti.append(utente)
-            print(utente)
+        
         
         return utenti
+    
+    def modifica_paziente(self, paziente, nome, email, password):
+        # Recupera l'email corrente
+        self.cursor.execute('SELECT email FROM utenti WHERE id = ?', (paziente.codice,))
+        email_corrente = self.cursor.fetchone()
+
+        if email_corrente and email_corrente[0] != email:
+            # Se l'email è cambiata, controlla se è già in uso
+            self.cursor.execute('SELECT * FROM utenti WHERE email = ?', (email,))
+            if self.cursor.fetchone() is not None:
+                messagebox.showerror("Errore", "Esiste già un paziente con questa email.")
+                return
+
+        # Procedi con l'aggiornamento
+        self.cursor.execute('''
+            UPDATE utenti
+            SET nome = ?, email = ?, password = ?
+            WHERE id = ?
+        ''', (nome, email, password, paziente.codice))
+        self.conn.commit()
+    
+    def carica_prenotazioni (self):
+        from model.prenotazione import Prenotazione
+        from model.paziente import Paziente
+        
+        self.cursor.execute ("SELECT * FROM prenotazioni")
+        rows = self.cursor.fetchall()
+        
+        prenotazioni = []
+        
+        for row in rows:
+            
+            self.cursor.execute('SELECT * FROM utenti WHERE id = ?', (row[0],))
+            dati = self.cursor.fetchone()
+            
+            paziente = Paziente(dati[1], dati [2], dati[3])
+            
+            prenotazione = Prenotazione(row[3], paziente)
+            
+            prenotazioni.append(prenotazione)
+        
+        return prenotazioni
+    
+    
+
+        
     
         
             
