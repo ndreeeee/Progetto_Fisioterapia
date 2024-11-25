@@ -4,7 +4,8 @@ from model.fisioterapista import Fisioterapista
 from model.paziente import Paziente
 from tkinter import messagebox
 from model.prenotazione import GestorePrenotazioni
-from database import Database
+import pickle
+import os
 
 
 
@@ -17,8 +18,7 @@ class LoginView:
         self.root.configure(bg="#f4f4f4")
         
         gestore = GestorePrenotazioni()
-        db = Database()
-        gestore.prenotazioni = db.carica_prenotazioni()
+        
         gestore.aggiorna_prenotazioni_future()
         self.posti_disponibili = gestore.get_prenotazioni_disponibili()
         self.posti_prenotati = gestore.get_posti_prenotati()

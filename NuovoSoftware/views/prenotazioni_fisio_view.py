@@ -4,9 +4,10 @@ from tkinter import messagebox
 
 
 class PrenotazioniFisio():
-    def __init__(self, root, fisioterapista):
+    def __init__(self, root, fisioterapista, gestore_dati):
         self.root = root
         self.fisioterapista = fisioterapista
+        self.gestore_dati = gestore_dati
         
         prenotazioni_window = tk.Toplevel(self.root)
         prenotazioni_window.title("Gestisci Prenotazioni")

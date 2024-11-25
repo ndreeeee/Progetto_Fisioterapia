@@ -79,7 +79,7 @@ class CercaPazienteView:
             self.visualizza_tutti_pazienti(self.fisioterapista)  
     
     
-    def apri_profilo_paziente(self, event):
+    def apri_profilo_paziente(self, gestore_dati, event):
         indice_selezionato = self.results_listbox.curselection()
         if indice_selezionato:
             
@@ -89,7 +89,7 @@ class CercaPazienteView:
             nome = dati[0].split(": ")[1]  
             email = dati[1].split(": ")[1]  
             paziente = self.fisioterapista.ottieni_paziente(nome, email)
-            ProfiloPaziente(self.root, paziente, self.fisioterapista)
+            ProfiloPaziente(self.root, paziente, self.fisioterapista, )
             
     def apri_chat_paziente(self, event):
 

@@ -44,8 +44,8 @@ class FisioterapistaView(tk.Frame):
         
 
         
-        self.esegui_backup_ = ttk.Button(self.main_frame, text="Esegui Backup", command=self.controller.esegui_backup, width=20, style='TButton')
-        self.esegui_backup_.pack(pady=20, ipadx=20, ipady=10)
+        #self.esegui_backup_ = ttk.Button(self.main_frame, text="Esegui Backup", command=self.controller.esegui_backup, width=20, style='TButton')
+        #self.esegui_backup_.pack(pady=20, ipadx=20, ipady=10)
 
      
         style = ttk.Style()
@@ -55,8 +55,18 @@ class FisioterapistaView(tk.Frame):
         self.spazio2.pack(expand=True)
         
         
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+
+    def on_close(self):
+        """Funzione da eseguire quando l'area riservata viene chiusa"""
+        print(f"Dati prima del salvataggio: {self.fisioterapista.lista_pazienti}, {self.fisioterapista.lista_esercizi}")
+        self.fisioterapista.save_data()  
+        print("Dati fisioterapista salvati.")
+        self.root.destroy()
         
         
-# --------------------------------------------- GESTIONE PAZIENTI ---------------------------------------------
+        
+        
         
         

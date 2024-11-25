@@ -1,7 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 
-from database import Database
     
 class ModificaPaziente:
     def __init__(self, root, paziente, fisioterapista):
@@ -16,7 +15,6 @@ class ModificaPaziente:
         modify_frame.pack_propagate(False)
         modify_frame.pack(pady=20, padx=20)  
 
-        db = Database()
 
         ttk.Label(modify_frame, text="Nome Paziente", font=("Arial", 16)).pack(pady=5)
         nome_entry = ttk.Entry(modify_frame, font=("Arial", 14), width=70)

@@ -4,7 +4,6 @@ from model.messaggio import Messaggio
 from tkinter import font
 import tkinter.ttk as ttk
 
-from database import Database
 
 
 
@@ -13,7 +12,6 @@ from database import Database
 
 class MessaggiView:
     
-    db = Database()
     
     def __init__(self, root, paziente, fisioterapista, flag):
         self.root = root

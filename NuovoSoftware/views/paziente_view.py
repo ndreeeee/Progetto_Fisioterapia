@@ -6,7 +6,6 @@ from tkinter import font, messagebox, filedialog as fd
 from views.cartella_clinica_paziente_view import CartellaClinicaPaziente
 from views.prenotazione_view import PrenotazioniView
 from views.messaggi_view import MessaggiView
-from database import Database
 
 
 

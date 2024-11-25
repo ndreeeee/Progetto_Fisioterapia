@@ -1,15 +1,12 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from database import Database
 
 
 
 class AggiungiPazienteView:
     
     
-    def __init__(self, root, fisioterapista):
-        
-        db = Database()
+    def __init__(self, root, fisioterapista, ):
  
         form_window = tk.Toplevel(root)
         form_window.title("Aggiungi Nuovo Paziente")
@@ -34,7 +31,7 @@ class AggiungiPazienteView:
         password_entry.pack(pady=10)
 
         submit_button = ttk.Button(self.main_frame, text="Aggiungi", 
-                                command=lambda: (db.aggiungi_utente(nome_entry.get(), email_entry.get(), password_entry.get(), "paziente"), fisioterapista.aggiungi_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), form_window)),
+                                command=lambda: fisioterapista.aggiungi_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), form_window),
                                 style="TButton")
         submit_button.pack(pady=15, ipadx=10, ipady=5)
 

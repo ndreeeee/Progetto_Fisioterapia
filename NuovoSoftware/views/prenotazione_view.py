@@ -9,12 +9,13 @@ class PrenotazioniView(tk.Toplevel):
     
     
     
-    def __init__(self, root, paziente, posti_disponibili):
+    def __init__(self, root, paziente, posti_disponibili, gestore_dati):
         super().__init__(root)
         self.root = root
         self.title("Prenotazioni disponibili")
         self.geometry("900x700")  
         self.posti_disponibili = posti_disponibili
+        self.gestore_dati = gestore_dati
         
         self.paziente = paziente
         self.posti_prenotati = paziente.get_prenotazioni()
