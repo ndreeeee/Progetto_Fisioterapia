@@ -23,25 +23,53 @@ class Fisioterapista(Utente):
     
         
     def save_data(self):
-        data = {
-            'pazienti': self.lista_pazienti,
-            'esercizi': self.lista_esercizi,
-            'prenotazioni': self.lista_prenotazioni
-        }
-        
-        os.makedirs('data', exist_ok=True)
-        
-        with open('data/fisioterapista_data.pkl', 'wb') as file:
-            pickle.dump(data, file, pickle.HIGHEST_PROTOCOL)
-            
-    def load_data(self):
+        """Salva i dati dei pazienti, esercizi e prenotazioni su file"""
         try:
-            with open('data/fisioterapista_data.pkl', 'rb') as file:
-                data = pickle.load(file)
-                self.lista_pazienti = data.get('pazienti', [])
-                self.lista_esercizi = data.get('esercizi', [])
-                self.lista_prenotazioni = data.get('prenotazioni', [])
-        except FileNotFoundError:
+            # Ensure data directory exists
+            os.makedirs('data', exist_ok=True)
+
+            # Salvataggio dei pazienti
+            with open('data/pazienti.pkl', 'wb') as pazienti_file:
+                pickle.dump(self.lista_pazienti, pazienti_file, protocol=pickle.HIGHEST_PROTOCOL)
+
+            # Salvataggio degli esercizi
+            with open('data/esercizi.pkl', 'wb') as esercizi_file:
+                pickle.dump(self.lista_esercizi, esercizi_file, protocol=pickle.HIGHEST_PROTOCOL)
+
+            # Salvataggio delle prenotazioni
+            with open('data/prenotazioni.pkl', 'wb') as prenotazioni_file:
+                pickle.dump(self.lista_prenotazioni, prenotazioni_file, protocol=pickle.HIGHEST_PROTOCOL)
+
+            print("Dati salvati correttamente.")
+
+        except Exception as e:
+            print(f"Errore durante il salvataggio: {e}")
+            messagebox.showerror("Errore", f"Impossibile salvare i dati: {e}")
+
+    def load_data(self):
+        """Carica i dati dei pazienti, esercizi e prenotazioni dal file"""
+        try:
+            # Caricamento dei pazienti
+            if os.path.exists('data/pazienti.pkl'):
+                with open('data/pazienti.pkl', 'rb') as pazienti_file:
+                    self.lista_pazienti = pickle.load(pazienti_file)
+                print(f"Pazienti caricati: {len(self.lista_pazienti)}")
+
+            # Caricamento degli esercizi
+            if os.path.exists('data/esercizi.pkl'):
+                with open('data/esercizi.pkl', 'rb') as esercizi_file:
+                    self.lista_esercizi = pickle.load(esercizi_file)
+                print(f"Esercizi caricati: {len(self.lista_esercizi)}")
+
+            # Caricamento delle prenotazioni
+            if os.path.exists('data/prenotazioni.pkl'):
+                with open('data/prenotazioni.pkl', 'rb') as prenotazioni_file:
+                    self.lista_prenotazioni = pickle.load(prenotazioni_file)
+                print(f"Prenotazioni caricate: {len(self.lista_prenotazioni)}")
+
+        except Exception as e:
+            print(f"Errore durante il caricamento: {e}")
+            # Se i file non esistono, inizializza le liste vuote
             self.lista_pazienti = []
             self.lista_esercizi = []
             self.lista_prenotazioni = []
@@ -114,7 +142,8 @@ class Fisioterapista(Utente):
             if esercizio.titolo == titolo:
                 messagebox.showerror("Errore", "Questo esercizio è stato già inserito")
                 return      
-        self.lista_esercizi.append(Esercizio(titolo, descrizione, video_url))
+        exercise = Esercizio(titolo, descrizione, video_url)
+        self.lista_esercizi.append(exercise)
         self.save_data()  # Save after adding exercise
         messagebox.showinfo("Successo", "Esercizio inserito con successo!")
         

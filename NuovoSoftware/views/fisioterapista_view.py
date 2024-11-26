@@ -4,6 +4,7 @@ from views.cerca_paziente_view import CercaPazienteView
 from views.aggiungi_paziente_view import AggiungiPazienteView
 from views.mostra_lista_esercizi_view import MostraListaEsercizi
 from views.prenotazioni_fisio_view import PrenotazioniFisio
+import pickle
 
 
 # width=700, height=600
@@ -54,6 +55,10 @@ class FisioterapistaView(tk.Frame):
         self.spazio2 = ttk.Label(self.main_frame)
         self.spazio2.pack(expand=True)
         
+        with open('data/pazienti.pkl', 'rb') as f:
+            pazienti = pickle.load(f)
+            print(f"paziente {pazienti}" )
+                
         
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         
