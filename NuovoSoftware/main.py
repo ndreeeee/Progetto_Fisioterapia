@@ -11,7 +11,7 @@ def carica_utenti():
             return pickle.load(file)
     except FileNotFoundError:
         return []
-
+""""""
 def salva_utenti(lista_utenti):
     os.makedirs('data', exist_ok=True)
     with open('data/utenti.pkl', 'wb') as file:
