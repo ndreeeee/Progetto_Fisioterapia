@@ -12,7 +12,6 @@ class CartellaClinica:
         
         self.codice = CartellaClinica._id_counter
         CartellaClinica._id_counter += 1
-        
         self.descrizione = descrizione
     
     def set_descrizione(self,descrizione):

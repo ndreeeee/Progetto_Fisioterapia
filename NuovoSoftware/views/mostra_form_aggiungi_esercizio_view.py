@@ -1,8 +1,7 @@
 import tkinter as tk
-
-from tkinter import scrolledtext  
 import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
+from tkinter import simpledialog
+from controller.gestore_esercizi import GestoreEsercizi
 
 class MostraFormAggiungiEsercizio:
     def __init__(self, root, fisioterapista):
@@ -31,7 +30,7 @@ class MostraFormAggiungiEsercizio:
         
         
         ttk.Label(self.main_frame, text="Descrizione", font=("Arial", 12)).pack(pady=5)
-        descrizione_entry = tk.Text(self.main_frame, height=5, width=40)  
+        descrizione_entry = ttk.Entry(self.main_frame, font = ("Arial", 12), width=40)  
         descrizione_entry.pack(pady=10)
         
         self.upload_button = ttk.Button(self.main_frame, text="Carica un Video", command=self.carica_file_video)
@@ -40,9 +39,9 @@ class MostraFormAggiungiEsercizio:
         self.file_label = ttk.Label(self.main_frame, text= self.file_video_path, font=("Arial", 12)).pack(pady=5)
         
         submit_button = ttk.Button(self.main_frame, text="Aggiungi Esercizio", 
-                                  command=lambda: self.aggiungi_esercizio(titolo_entry.get(), 
-                                                                          descrizione_entry.get("1.0", "end-1c"), 
-                                                                          self.file_video_path, form_window))
+                                  command=lambda: GestoreEsercizi().aggiungi_esercizio(titolo_entry.get(), 
+                                                                          descrizione_entry.get(), 
+                                                                          self.file_video_path, form_window, self.fisioterapista))
         submit_button.pack(pady=20, ipadx=10, ipady=5)
         
         back_button = ttk.Button(self.main_frame, text="Torna Indietro", command=form_window.destroy)
@@ -57,10 +56,5 @@ class MostraFormAggiungiEsercizio:
             self.file_video_path = file_path  
         
         
-    def aggiungi_esercizio (self, titolo, descrizione, video_url, window):
-        if titolo and descrizione:
-            if not video_url:
-                video_url = ""
-        self.fisioterapista.aggiungi_nuovo_esercizio(titolo, descrizione, video_url)        
-        window.destroy()
+    
         

@@ -1,17 +1,38 @@
 import sqlite3
-from tkinter import messagebox
+from database import Database
 
 
 class GestoreDati:
-    def __init__ (self, db):
-        self.db = db
+    def __init__ (self):
+        self.db = Database()
+
+    
+    def get_esercizi(self):
+        from model.esercizio import Esercizio
         
+        self.db.cursor.execute("SELECT * FROM esercizi")
+        rows = self.db.cursor.fetchall()
         
+        esercizi = []
+        
+        for row in rows:
+            esercizio = Esercizio (row[1], row[2], row[3])
+            esercizi.append(esercizio)
+    
+        return esercizi
+    
+    
+    def inserisci_esercizio(self, titolo, descrizione, video):
+        self.db.cursor.execute('''
+                INSERT INTO esercizi (titolo, descrizione, video_url)
+                VALUES (?, ?, ?)
+            ''', (titolo, descrizione, video))
+        self.db.conn.commit()
+    
     def ottieni_messaggi(self, fisioterapista, paziente):
         from model.messaggio import Messaggio
         
         
-        # Recupera tutti i messaggi dal DB
         self.db.cursor.execute("SELECT * FROM messaggi")
         rows = self.db.cursor.fetchall()
 
@@ -87,31 +108,58 @@ class GestoreDati:
                 utente = Fisioterapista(row[1], row[2], row[3])
             elif row[4] == 'paziente':
                 utente = Paziente(row[1], row[2], row[3])
-
+                
+            utente.set_id(row[0])
             utenti.append(utente)
         
         
         return utenti
     
+    def carica_pazienti(self):
+        from model.paziente import Paziente
+        self.db.cursor.execute("SELECT * FROM utenti")
+        rows = self.db.cursor.fetchall()
+        pazienti = []
+
+        for row in rows:
+            if row[4] == 'paziente':
+                utente = Paziente(row[1], row[2], row[3])
+                utente.set_id(row[0])
+                pazienti.append(utente)
+        
+        
+        return pazienti
+        
+    
     def modifica_paziente(self, paziente, nome, email, password):
-        # Recupera l'email corrente
-        self.db.cursor.execute('SELECT email FROM utenti WHERE id = ?', (paziente.codice,))
-        email_corrente = self.db.cursor.fetchone()
-
-        if email_corrente and email_corrente[0] != email:
-            # Se l'email è cambiata, controlla se è già in uso
-            self.db.cursor.execute('SELECT * FROM utenti WHERE email = ?', (email,))
-            if self.db.cursor.fetchone() is not None:
-                messagebox.showerror("Errore", "Esiste già un paziente con questa email.")
-                return
-
-        # Procedi con l'aggiornamento
+        print(f"UPDATE utenti SET nome = '{nome}', email = '{email}', password = '{password}' WHERE id = {paziente.id}")
         self.db.cursor.execute('''
             UPDATE utenti
             SET nome = ?, email = ?, password = ?
             WHERE id = ?
-        ''', (nome, email, password, paziente.codice))
+        ''', (nome, email, password, paziente.get_id()))
         self.db.conn.commit()
+        
+    def elimina_paziente(self, paziente_id):
+        try:
+            # Elimina il paziente dal database
+            self.db.cursor.execute('''
+                DELETE FROM utenti
+                WHERE id = ? 
+            ''', (paziente_id,))
+            
+            # Conferma l'operazione
+            self.db.conn.commit()
+
+            # Verifica quante righe sono state eliminate
+            if self.db.cursor.rowcount == 0:
+                print(f"Nessun paziente trovato con ID {paziente_id}.")
+            else:
+                print(f"Paziente con ID {paziente_id} eliminato con successo.")
+
+        except Exception as e:
+            print(f"Errore durante l'eliminazione del paziente: {e}")
+
     
     def carica_prenotazioni (self):
         from model.prenotazione import Prenotazione

@@ -79,7 +79,7 @@ class CercaPazienteView:
             self.visualizza_tutti_pazienti(self.fisioterapista)  
     
     
-    def apri_profilo_paziente(self, gestore_dati, event):
+    def apri_profilo_paziente(self, event):
         indice_selezionato = self.results_listbox.curselection()
         if indice_selezionato:
             

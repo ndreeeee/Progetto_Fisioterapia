@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import messagebox
-from database import Database
 import tkinter.ttk as ttk
 
 

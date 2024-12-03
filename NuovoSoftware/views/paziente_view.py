@@ -5,7 +5,8 @@ import tkinter.ttk as ttk
 from tkinter import font, messagebox, filedialog as fd
 from views.cartella_clinica_paziente_view import CartellaClinicaPaziente
 from views.prenotazione_view import PrenotazioniView
-from views.messaggi_view import MessaggiView
+from views.messaggi_view import MessaggiView 
+from views.mostra_esercizi_assegnati_paziente_view import MostraEserciziAssegnatiView
 
 
 
@@ -58,8 +59,8 @@ class PazienteView(tk.Frame):
         self.messaggi_btn = ttk.Button(self.main_frame, text="Messaggi", command=lambda: MessaggiView(tk.Tk(), paziente, self.fisioterapista, 0), width=20, style='TButton')
         self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
 
-        #self.esercizi_btn = ttk.Button(self.main_frame, text="Esercizi", command=self.mostra_esercizi, width=20, style='TButton')
-        #self.esercizi_btn.pack(pady=20, ipadx=20, ipady=10)
+        self.esercizi_btn = ttk.Button(self.main_frame, text="Esercizi", command=lambda: MostraEserciziAssegnatiView(self.root,self.paziente), width=20, style='TButton')
+        self.esercizi_btn.pack(pady=20, ipadx=20, ipady=10)
 
         
         

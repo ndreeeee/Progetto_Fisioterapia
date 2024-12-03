@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from controller.gestore_fisioterapista import GestoreFisioterapista
 
     
 class ModificaPaziente:
@@ -32,8 +33,7 @@ class ModificaPaziente:
 
        
         submit_button = ttk.Button(modify_frame, text="Salva Modifiche", 
-                                command=lambda: (db.modifica_paziente(self.paziente, nome_entry.get(), email_entry.get(), password_entry.get()), 
-                                                 self.fisioterapista.modifica_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), modify_window, self.paziente)),
+                                command=lambda: (GestoreFisioterapista().modifica_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), modify_window, self.paziente, self.fisioterapista)),
                                 style="TButton")
         submit_button.pack(pady=15, ipadx=10, ipady=5)
 

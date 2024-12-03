@@ -19,10 +19,20 @@ class Esercizio:
         self.titolo = titolo
         self.video = video
  
-    def __getstate__(self):
-       
-        state = self.__dict__.copy()
-        return state
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
+    def get_video (self):
+        return self.video
+    
+    def get_titolo(self):
+        return self.titolo
+    
+    def get_descrizione(self):
+        return self.descrizione
+    
+    def set_descrizione(self, descrizione):
+        self.descrizione = descrizione
+    
+    def set_titolo (self, titolo):
+        self.titolo = titolo
+        
+    def set_video(self, video):
+        self.video = video

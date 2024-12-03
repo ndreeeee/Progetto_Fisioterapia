@@ -1,11 +1,10 @@
 import tkinter as tk
-
-from tkinter import scrolledtext  
 import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
+from tkinter import font
 from views.cartella_clinica_fisio_view import CartellaClinicaFisio
 from views.modifica_paziente_view import ModificaPaziente
 from views.gestisci_esercizi_paziente_view import GestisciEsercizi
+from controller.gestore_fisioterapista import GestoreFisioterapista
 
 class ProfiloPaziente:
     def __init__(self, root, paziente, fisioterapista):
@@ -56,7 +55,7 @@ class ProfiloPaziente:
         
                     # Pulsante per eliminare il paziente
         ttk.Button(profilo_paziente_window, text="Elimina Paziente", 
-                command=lambda: self.fisioterapista.elimina_paziente(self.paziente, search_frame), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: GestoreFisioterapista().elimina_paziente(self.paziente, search_frame, self.fisioterapista), style="TButton").pack(pady=20, ipadx=20, ipady=10)
 
         # Pulsante per tornare indietro
         ttk.Button(profilo_paziente_window, text="Torna Indietro", 

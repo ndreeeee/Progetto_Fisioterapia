@@ -8,12 +8,20 @@ import os
 
 
 class Paziente(Utente):
+
     def __init__(self, nome, email, password):
-        super().__init__(nome, email, password)
         
+        super().__init__(nome, email, password)
+        self.id = -1
         self.esercizi_assegnati = []
         self.prenotazioni = []
         self.cartella_clinica = None
+        
+    def set_id(self,id):
+        self.id = id
+    
+    def get_id(self):
+        return self.id
     
   
     def set_cartella_clinica(self,cartella):
@@ -30,53 +38,36 @@ class Paziente(Utente):
     def get_esercizi(self):
         return self.esercizi_assegnati
     
-    def add_esercizio(self, esercizio, file_path='data/utenti.pkl'):
+    def add_esercizio(self, esercizio):
         self.esercizi_assegnati.append(esercizio)
-        self._salva_modifiche_pickle(file_path)
     
-    def remove_esercizio(self, esercizio, file_path='data/utenti.pkl'):
+    def remove_esercizio(self, esercizio):
         self.esercizi_assegnati.remove(esercizio)
-        self._salva_modifiche_pickle(file_path)
 
         
-    def prenota (self, prenotazione, file_path='data/utenti.pkl'):
+    def prenota (self, prenotazione):
         prenotazione.stato = "prenotato"
         self.prenotazioni.append(prenotazione)
-        self._salva_modifiche_pickle(file_path)
 
     
-    def elimina_prenotazione (self, prenotazione, file_path='data/utenti.pkl'):
+    def elimina_prenotazione (self, prenotazione):
         if prenotazione in self.prenotazioni:
             prenotazione.stato = "disponibile"
             self.prenotazioni.remove(prenotazione)
-            self._salva_modifiche_pickle(file_path)
     
     def get_prenotazioni(self):
         return self.prenotazioni
     
-    
-    
+    def aggiorna_stato_esercizio(self, esercizio, stato):
+        for esercizio_assegnato in self.esercizi_assegnati:
+            if esercizio == esercizio_assegnato:
+                if stato == 1:
+                    esercizio_assegnato.set_stato("completato")
+                elif stato == 0:
+                    esercizio_assegnato.set_stato("incompleto")
+        
     def __del__(self):
-        print(f"Paziente {self.nome} eliminato")
+        print(f"Paziente {self.nome} eliminato, id = {self.id}")
         
-    def _salva_modifiche_pickle(self, file_path='data/utenti.pkl'):
-        try:
-            # Carica tutti gli utenti dal file pickle
-            lista_utenti = []
-            if os.path.exists(file_path):
-                with open(file_path, 'rb') as file:
-                    lista_utenti = pickle.load(file)
-
-            # Cerca l'utente corrente nella lista e aggiorna i suoi dati
-            for idx, utente in enumerate(lista_utenti):
-                if isinstance(utente, Paziente) and utente.email == self.email:
-                    lista_utenti[idx] = self  # Aggiorna i dati di questo utente
-
-            # Salva la lista aggiornata nel file pickle
-            with open(file_path, 'wb') as file:
-                pickle.dump(lista_utenti, file)
-                print("Modifiche salvate correttamente nel file pickle.")
-        except Exception as e:
-            print(f"Errore durante il salvataggio: {e}")
-        
-    
+    def __repr__(self):
+        return f"Paziente (id = {self.id}, nome={self.nome}, email={self.email}, password= {self.password})"

@@ -1,10 +1,11 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+from controller.gestore_dati import GestoreDati
 from views.cerca_paziente_view import CercaPazienteView
 from views.aggiungi_paziente_view import AggiungiPazienteView
 from views.mostra_lista_esercizi_view import MostraListaEsercizi
 from views.prenotazioni_fisio_view import PrenotazioniFisio
-import pickle
+
 
 
 # width=700, height=600
@@ -18,11 +19,10 @@ class FisioterapistaView(tk.Frame):
         self.main_frame.pack_propagate(False)  
         self.main_frame.pack()
         
-        # per centrare verticalmente assieme a spazio2
         self.spazio = tk.Label(self.main_frame)
         self.spazio.pack(expand=True)
 
-        self.label = ttk.Label(self.main_frame, text=f"Benvenuto, {self.fisioterapista.nome}", font=("Arial", 18, "bold"))
+        self.label = ttk.Label(self.main_frame, text=f"Benvenuto, {self.fisioterapista.get_nome()}", font=("Arial", 18, "bold"))
         self.label.pack(pady=20)
         
         button_font = ("Arial", 14, "bold") 
@@ -55,12 +55,7 @@ class FisioterapistaView(tk.Frame):
         self.spazio2 = ttk.Label(self.main_frame)
         self.spazio2.pack(expand=True)
         
-        with open('data/pazienti.pkl', 'rb') as f:
-            pazienti = pickle.load(f)
-            print(f"paziente {pazienti}" )
-                
-        
-        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+      
         
 
     def on_close(self):

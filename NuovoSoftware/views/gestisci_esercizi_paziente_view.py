@@ -108,8 +108,9 @@ class GestisciEsercizi:
         
         esercizi_predefiniti = self.fisioterapista.get_esercizi()
         
-        esercizi_disponibili = [esercizio for esercizio in esercizi_predefiniti if esercizio not in esercizi_assegnati]
-        
+        titoli_assegnati = {esercizio.titolo for esercizio in esercizi_assegnati}
+        esercizi_disponibili = [esercizio for esercizio in esercizi_predefiniti if esercizio.titolo not in titoli_assegnati]
+            
         listbox_esercizi = tk.Listbox(aggiungi_frame, font=("Arial", 14), width=70, height=15)
         listbox_esercizi.pack(pady=10)
 
@@ -121,6 +122,8 @@ class GestisciEsercizi:
             if selezione:
                 index = selezione[0]
                 esercizio_selezionato = esercizi_disponibili[index]
+                
+                
                 
                 self.fisioterapista.aggiungi_esercizio_paziente(paziente, esercizio_selezionato)
                 self.esercizi_listbox.insert(tk.END, f"{esercizio_selezionato.titolo}: {esercizio_selezionato.descrizione}")
