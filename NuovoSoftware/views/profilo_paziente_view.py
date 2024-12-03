@@ -4,14 +4,12 @@ from tkinter import font
 from views.cartella_clinica_fisio_view import CartellaClinicaFisio
 from views.modifica_paziente_view import ModificaPaziente
 from views.gestisci_esercizi_paziente_view import GestisciEsercizi
-from controller.gestore_fisioterapista import GestoreFisioterapista
 
 class ProfiloPaziente:
-    def __init__(self, root, paziente, fisioterapista):
+    def __init__(self, root, paziente, gestore):
         self.root = root
         self.paziente = paziente
-        self.fisioterapista = fisioterapista
-       
+        self.gestore = gestore
         
         search_frame = tk.Toplevel(self.root)
         search_frame.title(f"Profilo di {paziente.nome}")
@@ -45,17 +43,17 @@ class ProfiloPaziente:
         """
         # Pulsanti per gestire la cartella clinica e gli esercizi
         ttk.Button(profilo_paziente_window, text="Cartella Clinica", 
-                command=lambda: CartellaClinicaFisio(self.root, self.paziente, self.fisioterapista), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: CartellaClinicaFisio(self.root, self.paziente, self.gestore), style="TButton").pack(pady=20, ipadx=20, ipady=10)
         ttk.Button(profilo_paziente_window, text="Gestisci Esercizi", 
-                command=lambda: GestisciEsercizi(self.root, self.paziente, self.fisioterapista), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: GestisciEsercizi(self.root, self.paziente), style="TButton").pack(pady=20, ipadx=20, ipady=10)
 
         # Pulsante per modificare il paziente
         ttk.Button(profilo_paziente_window, text="Modifica Paziente", 
-                command=lambda: ModificaPaziente(search_frame, paziente, fisioterapista), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: ModificaPaziente(search_frame, self.paziente, self.gestore), style="TButton").pack(pady=20, ipadx=20, ipady=10)
         
                     # Pulsante per eliminare il paziente
         ttk.Button(profilo_paziente_window, text="Elimina Paziente", 
-                command=lambda: GestoreFisioterapista().elimina_paziente(self.paziente, search_frame, self.fisioterapista), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: self.gestore.elimina_paziente(self.paziente, search_frame), style="TButton").pack(pady=20, ipadx=20, ipady=10)
 
         # Pulsante per tornare indietro
         ttk.Button(profilo_paziente_window, text="Torna Indietro", 
@@ -68,25 +66,6 @@ class ProfiloPaziente:
             
 
     
-    def aggiorna_ricerca(self, event):
-    # Funzione per aggiornare i risultati della ricerca dinamica
-        query = self.search_entry.get().strip()  # Rimuove spazi bianchi iniziali e finali
-        if query:
-            # Esegue la ricerca solo se ci sono caratteri nella query
-            risultati = self.controller.cerca_pazienti(query)
-            self.results_listbox.delete(0, tk.END)  # Pulisce la Listbox
-
-            if risultati:
-                for paziente in risultati:
-                    try:
-                        # Correggi l'accesso ai dati del paziente
-                        self.results_listbox.insert(tk.END, f"ID: {paziente['id']}, Nome: {paziente['nome']}, Email: {paziente['email']}")
-                    except KeyError:
-                        self.results_listbox.insert(tk.END, "Dati paziente non validi.")
-            else:
-                self.results_listbox.insert(tk.END, "Nessun paziente trovato.")
-        else:
-            # Se la query è vuota, mostra tutti i pazienti
-            self.visualizza_tutti_pazienti()  # Chiamata al metodo per visualizzare tutti i pazienti
+    
 
 

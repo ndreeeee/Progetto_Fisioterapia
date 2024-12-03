@@ -6,13 +6,21 @@ from views.fisioterapista_view import FisioterapistaView
 
 class CartellaClinica:
     
-    _id_counter = 1 
+     
 
     def __init__(self, descrizione):
         
-        self.codice = CartellaClinica._id_counter
-        CartellaClinica._id_counter += 1
+        self.id = -1
         self.descrizione = descrizione
+    
+    def get_id(self):
+        return self.id
+    
+    def set_id(self,id):
+        self.id = id
     
     def set_descrizione(self,descrizione):
         self.descrizione = descrizione
+        
+    def get_descrizione(self):
+        return self.descrizione

@@ -117,27 +117,50 @@ class GestoreDati:
     
     def carica_pazienti(self):
         from model.paziente import Paziente
-        self.db.cursor.execute("SELECT * FROM utenti")
+        from model.cartella_clinica import CartellaClinica
+
+        # Query per ottenere i pazienti e le loro cartelle cliniche
+        query = '''
+            SELECT 
+                utenti.id AS paziente_id,
+                utenti.nome,
+                utenti.email,
+                utenti.password,
+                cartella_clinica.descrizione AS descrizione_cartella
+            FROM utenti
+            LEFT JOIN cartella_clinica ON utenti.id = cartella_clinica.id_paziente
+            WHERE utenti.tipo = 'paziente';
+        '''
+        
+        self.db.cursor.execute(query)
         rows = self.db.cursor.fetchall()
         pazienti = []
 
         for row in rows:
-            if row[4] == 'paziente':
-                utente = Paziente(row[1], row[2], row[3])
-                utente.set_id(row[0])
-                pazienti.append(utente)
-        
-        
+            # Crea l'oggetto Paziente
+            paziente = Paziente(row[1], row[2], row[3])
+            paziente.set_id(row[0])
+
+            # Se la cartella clinica è presente, associare
+            descrizione_cartella = row[4]
+            if descrizione_cartella:
+                cartella = CartellaClinica(descrizione_cartella)
+                cartella.set_id(row[0])  # Usa lo stesso ID del paziente
+                paziente.set_cartella_clinica(cartella)
+
+            # Aggiungi il paziente alla lista
+            pazienti.append(paziente)
+
         return pazienti
+
         
     
-    def modifica_paziente(self, paziente, nome, email, password):
-        print(f"UPDATE utenti SET nome = '{nome}', email = '{email}', password = '{password}' WHERE id = {paziente.id}")
+    def modifica_paziente(self, id, nome, email, password):
         self.db.cursor.execute('''
             UPDATE utenti
             SET nome = ?, email = ?, password = ?
             WHERE id = ?
-        ''', (nome, email, password, paziente.get_id()))
+        ''', (nome, email, password, id))
         self.db.conn.commit()
         
     def elimina_paziente(self, paziente_id):
@@ -151,14 +174,23 @@ class GestoreDati:
             # Conferma l'operazione
             self.db.conn.commit()
 
-            # Verifica quante righe sono state eliminate
-            if self.db.cursor.rowcount == 0:
-                print(f"Nessun paziente trovato con ID {paziente_id}.")
-            else:
-                print(f"Paziente con ID {paziente_id} eliminato con successo.")
-
         except Exception as e:
             print(f"Errore durante l'eliminazione del paziente: {e}")
+            
+    def aggiungi_cartella(self, descrizione, id_paziente):
+        self.db.cursor.execute('''
+                INSERT INTO cartella_clinica (id_paziente, descrizione)
+                VALUES (?, ?)
+            ''', (id_paziente, descrizione))
+        self.db.conn.commit()
+        
+    def modifica_cartella(self, id, descrizione):
+        self.db.cursor.execute('''
+            UPDATE cartella_clinica
+            SET  descrizione = ?
+            WHERE id = ?
+        ''', (descrizione, id))
+        self.db.conn.commit()
 
     
     def carica_prenotazioni (self):
@@ -182,6 +214,10 @@ class GestoreDati:
             prenotazioni.append(prenotazione)
         
         return prenotazioni
+    
+    
+  
+
         
         
         

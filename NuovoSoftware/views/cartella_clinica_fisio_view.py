@@ -2,13 +2,13 @@ import tkinter as tk
 
 from tkinter import scrolledtext  
 import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
+from tkinter import messagebox
 
 class CartellaClinicaFisio:
-    def __init__(self, root, paziente, fisioterapista):
+    def __init__(self, root, paziente, gestore):
         self.root = root
         self.paziente = paziente
-        self.fisioterapista = fisioterapista
+        self.gestore = gestore
 
         cartella_window = tk.Toplevel(self.root)
         cartella_window.title("Cartella Clinica")
@@ -38,7 +38,7 @@ class CartellaClinicaFisio:
             
             if flag == 1:
                 try:
-                    self.fisioterapista.aggiungi_cartella_clinica(paziente, testo_modificato)
+                    self.gestore.aggiungi_cartella_clinica(self.paziente, testo_modificato)
                     cartella_window.destroy
 
                 except Exception as e:
@@ -48,7 +48,7 @@ class CartellaClinicaFisio:
                     messagebox.showwarning("Attenzione", "Nessun testo da salvare.")
                     return
                 try:
-                    self.fisioterapista.modifica_cartella_clinica(cartella_clinica, testo_modificato)  
+                    self.gestore.modifica_cartella_clinica(self.paziente, testo_modificato)  
                     messagebox.showinfo("Successo", "Modifiche salvate con successo!")
                     cartella_window.destroy
                 except Exception as e:

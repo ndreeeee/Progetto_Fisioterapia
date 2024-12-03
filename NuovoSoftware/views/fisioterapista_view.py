@@ -1,6 +1,5 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from controller.gestore_dati import GestoreDati
 from views.cerca_paziente_view import CercaPazienteView
 from views.aggiungi_paziente_view import AggiungiPazienteView
 from views.mostra_lista_esercizi_view import MostraListaEsercizi
@@ -10,10 +9,11 @@ from views.prenotazioni_fisio_view import PrenotazioniFisio
 
 # width=700, height=600
 class FisioterapistaView(tk.Frame):
-    def __init__(self, root, fisioterapista):
+    def __init__(self, root, fisioterapista, gestore):
         self.root = root
         self.file_video_path = ""
         self.fisioterapista = fisioterapista
+        self.gestore = gestore
 
         self.main_frame = tk.Frame(self.root, width=900, height=700)
         self.main_frame.pack_propagate(False)  
@@ -27,20 +27,20 @@ class FisioterapistaView(tk.Frame):
         
         button_font = ("Arial", 14, "bold") 
 
-        self.cerca_pazienti_button = ttk.Button(self.main_frame, text="Cerca Paziente", command=lambda: CercaPazienteView(0, self.root, self.fisioterapista), 
+        self.cerca_pazienti_button = ttk.Button(self.main_frame, text="Cerca Paziente", command=lambda: CercaPazienteView(0, self.root, self.fisioterapista, self.gestore), 
                                                 width=20, style='TButton')
         self.cerca_pazienti_button.pack(pady=20, ipadx=20, ipady=10)
 
-        self.aggiungi_paziente_button = ttk.Button(self.main_frame, text="Aggiungi Paziente", command=lambda: AggiungiPazienteView(self.root, self.fisioterapista), width=20, style='TButton')
+        self.aggiungi_paziente_button = ttk.Button(self.main_frame, text="Aggiungi Paziente", command=lambda: AggiungiPazienteView(self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
         self.aggiungi_paziente_button.pack(pady=20, ipadx=20, ipady=10)
         
-        self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, self.fisioterapista), width=20, style='TButton')
+        self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
         self.mostra_esercizi_button.pack(pady=20, ipadx=20, ipady=10)
         
-        self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, self.fisioterapista), width=20, style='TButton')
+        self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
         self.messaggia_paziente_button.pack(pady=20, ipadx=20, ipady=10)
 
-        self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=lambda: PrenotazioniFisio(self.root, self.fisioterapista), width=20, style='TButton')
+        self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=lambda: PrenotazioniFisio(self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
         self.prenotazione_button.pack(pady=20, ipadx=20, ipady=10)
         
 
@@ -58,12 +58,7 @@ class FisioterapistaView(tk.Frame):
       
         
 
-    def on_close(self):
-        """Funzione da eseguire quando l'area riservata viene chiusa"""
-        print(f"Dati prima del salvataggio: {self.fisioterapista.lista_pazienti}, {self.fisioterapista.lista_esercizi}")
-        self.fisioterapista.save_data()  
-        print("Dati fisioterapista salvati.")
-        self.root.destroy()
+   
         
         
         

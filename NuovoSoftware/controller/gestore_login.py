@@ -1,6 +1,5 @@
 from controller.gestore_dati import GestoreDati
 from controller.gestore_fisioterapista import GestoreFisioterapista
-from controller.gestore_esercizi import GestoreEsercizi
 from tkinter import messagebox
 import tkinter as tk
 
@@ -22,10 +21,10 @@ class GestoreLogin:
                 
                 
                 if isinstance(utente, Fisioterapista):
+                    gestore = GestoreFisioterapista()
+                    gestore.set_lista_pazienti(GestoreDati().carica_pazienti())
                     from views.fisioterapista_view import FisioterapistaView
-                    utente.set_lista_pazienti(GestoreDati().carica_pazienti())
-                    utente.set_lista_esercizi(GestoreEsercizi().get_esercizi())
-                    FisioterapistaView(root, utente)  
+                    FisioterapistaView(root, utente, gestore)  
 
                 elif isinstance(utente, Paziente):
                     from views.paziente_view import PazienteView

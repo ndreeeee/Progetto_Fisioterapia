@@ -1,13 +1,12 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from controller.gestore_fisioterapista import GestoreFisioterapista
 
     
 class ModificaPaziente:
-    def __init__(self, root, paziente, fisioterapista):
+    def __init__(self, root, paziente, gestore):
         self.root = root
         self.paziente = paziente
-        self.fisioterapista = fisioterapista
+        self.gestore = gestore
         
         modify_window = tk.Toplevel(self.root)
         modify_window.title("Modifica Paziente")
@@ -33,7 +32,7 @@ class ModificaPaziente:
 
        
         submit_button = ttk.Button(modify_frame, text="Salva Modifiche", 
-                                command=lambda: (GestoreFisioterapista().modifica_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), modify_window, self.paziente, self.fisioterapista)),
+                                command=lambda: (self.gestore.modifica_paziente(nome_entry.get(), email_entry.get(), password_entry.get(), modify_window, self.paziente)),
                                 style="TButton")
         submit_button.pack(pady=15, ipadx=10, ipady=5)
 

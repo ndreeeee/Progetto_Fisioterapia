@@ -1,18 +1,16 @@
 import tkinter as tk
-from tkinter import scrolledtext  
 import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
-
 from views.profilo_paziente_view import ProfiloPaziente
 from views.messaggi_view import MessaggiView
 
 
 # width=700, height=600
 class CercaPazienteView:
-    def __init__(self, flag, root, fisioterapista):
+    def __init__(self, flag, root, fisioterapista, gestore):
         self.root = root
         self.fisioterapista = fisioterapista
         search_window = tk.Toplevel(self.root)
+        self.gestore = gestore
         self.flag = flag
         search_window.title("Cerca Paziente")
 
@@ -40,7 +38,7 @@ class CercaPazienteView:
         back_button = ttk.Button(search_frame, text="Torna Indietro", command=search_window.destroy, style="TButton")
         back_button.pack(pady=20, ipadx=10, ipady=5)  
 
-        self.visualizza_tutti_pazienti(self.fisioterapista)  
+        self.visualizza_tutti_pazienti()  
         
         if self.flag == 1:
             self.results_listbox.bind("<Double-1>", self.apri_chat_paziente)
@@ -50,9 +48,10 @@ class CercaPazienteView:
             
             
         
-    def visualizza_tutti_pazienti(self, fisioterapista):
+    def visualizza_tutti_pazienti(self):
         self.results_listbox.delete(0, tk.END)
-        for paziente in fisioterapista.lista_pazienti:
+        lista_pazienti = self.gestore.get_pazienti()
+        for paziente in lista_pazienti:
             self.results_listbox.insert(tk.END, f"Nome: {paziente.nome}, Email: {paziente.email}")
 
         
@@ -63,7 +62,7 @@ class CercaPazienteView:
         query = self.search_entry.get().strip()  
         if query:
             
-            risultati = self.fisioterapista.cerca_pazienti(query)
+            risultati = self.gestore.cerca_pazienti(query)
             self.results_listbox.delete(0, tk.END)
 
             if risultati:
@@ -76,7 +75,7 @@ class CercaPazienteView:
             else:
                 self.results_listbox.insert(tk.END, "Nessun paziente trovato.")
         else:
-            self.visualizza_tutti_pazienti(self.fisioterapista)  
+            self.visualizza_tutti_pazienti()  
     
     
     def apri_profilo_paziente(self, event):
@@ -88,8 +87,8 @@ class CercaPazienteView:
             dati = testo_selezionato.split(", ")
             nome = dati[0].split(": ")[1]  
             email = dati[1].split(": ")[1]  
-            paziente = self.fisioterapista.ottieni_paziente(nome, email)
-            ProfiloPaziente(self.root, paziente, self.fisioterapista, )
+            paziente = self.gestore.ottieni_paziente(nome, email)
+            ProfiloPaziente(self.root, paziente, self.gestore)
             
     def apri_chat_paziente(self, event):
 
@@ -101,7 +100,7 @@ class CercaPazienteView:
             dati = testo_selezionato.split(", ")
             nome = dati[0].split(": ")[1]  
             email = dati[1].split(": ")[1]  
-            paziente = self.fisioterapista.ottieni_paziente(nome, email)
+            paziente = self.gestore.ottieni_paziente(nome, email)
             root = tk.Tk() 
             MessaggiView(root, paziente, self.fisioterapista, 1)
             

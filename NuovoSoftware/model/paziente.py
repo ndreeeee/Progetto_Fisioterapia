@@ -1,7 +1,5 @@
 from model.utente import Utente
-import pickle
-import os
-
+from model.cartella_clinica import CartellaClinica
 
 
 
@@ -12,23 +10,26 @@ class Paziente(Utente):
     def __init__(self, nome, email, password):
         
         super().__init__(nome, email, password)
-        self.id = -1
         self.esercizi_assegnati = []
         self.prenotazioni = []
         self.cartella_clinica = None
-        
-    def set_id(self,id):
-        self.id = id
-    
-    def get_id(self):
-        return self.id
+      
     
   
     def set_cartella_clinica(self,cartella):
         self.cartella_clinica = cartella
         
     def get_cartella_clinica(self):
-        return self.cartella_clinica.descrizione
+        if self.cartella_clinica:
+            return self.cartella_clinica
+        else:
+            return False
+        
+    def aggiorna_cartella(self, descrizione):
+        self.cartella_clinica.set_descrizione(descrizione)
+
+
+       
     
     def set_credenziali(self, nome, email, password):
         self.nome = nome
