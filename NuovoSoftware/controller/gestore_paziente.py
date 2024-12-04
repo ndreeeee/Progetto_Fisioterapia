@@ -1,3 +1,5 @@
+from controller.gestore_dati import GestoreDati
+
 class GestorePaziente():
     def __init__(self):
         self.lista_esercizi_assegnati = []
@@ -24,4 +26,20 @@ class GestorePaziente():
         
     def get_cartella(self):
         return self.cartella_clinica
+    
+    def get_esercizio(self, titolo):
+        for esercizio in self.lista_esercizi_assegnati:
+            if esercizio.get_titolo() == titolo:
+                return esercizio
+            
+            
+    def aggiorna_stato_esercizio(self, esercizio, stato):
+        for esercizio_assegnato in self.lista_esercizi_assegnati:
+            if esercizio == esercizio_assegnato:
+                if stato == 1:
+                    esercizio_assegnato.set_stato("completato")
+                    GestoreDati().aggiorna_stato("completato")
+                elif stato == 0:
+                    esercizio_assegnato.set_stato("incompleto")
+                    GestoreDati().aggiorna_stato("incompleto")
         

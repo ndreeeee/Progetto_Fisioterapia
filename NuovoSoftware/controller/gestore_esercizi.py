@@ -67,6 +67,7 @@ class GestoreEsercizi:
         return esercizi_filtrati
     
     
+    
     def aggiungi_esercizio_assegnato(self, paziente, esercizio):
         from model.esercizio_assegnato import EsercizioAssegnato
         from controller.gestore_dati import GestoreDati

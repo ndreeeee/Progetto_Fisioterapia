@@ -379,9 +379,15 @@ class GestoreDati:
             print("dati", cartella_clinica)
             # Restituisce la descrizione della cartella clinica
             return cartella_clinica
-                
-          
-
+        
+    def aggiorna_stato(self, esercizio, stato):
+        
+        self.db.cursor.execute('''
+            UPDATE esercizi0_assegnato
+            SET  stato = ?
+            WHERE id = ?
+        ''', (stato,  esercizio.get_id()))
+        self.db.conn.commit()
 
 
             

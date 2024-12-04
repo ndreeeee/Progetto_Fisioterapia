@@ -49,9 +49,9 @@ class MostraEserciziAssegnatiView():
             if selezione:
                 indice = selezione[0]
                 esercizio_selezionato = self.esercizi_listbox.get(indice) 
-                
+                print("view", esercizio_selezionato)
 
 
-                MostraDettagliEsercizioPazienteView(self.root, esercizio_selezionato, self.paziente)
+                MostraDettagliEsercizioPazienteView(self.root, esercizio_selezionato, self.paziente, self.gestore)
         except Exception as e:
             print(f"Errore durante la visualizzazione dei dettagli dell'esercizio: {e}")

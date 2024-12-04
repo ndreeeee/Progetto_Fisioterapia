@@ -59,13 +59,7 @@ class Paziente(Utente):
     def get_prenotazioni(self):
         return self.prenotazioni
     
-    def aggiorna_stato_esercizio(self, esercizio, stato):
-        for esercizio_assegnato in self.esercizi_assegnati:
-            if esercizio == esercizio_assegnato:
-                if stato == 1:
-                    esercizio_assegnato.set_stato("completato")
-                elif stato == 0:
-                    esercizio_assegnato.set_stato("incompleto")
+    
         
     def __del__(self):
         print(f"Paziente {self.nome} eliminato, id = {self.id}")
