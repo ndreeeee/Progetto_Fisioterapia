@@ -6,6 +6,7 @@ from tkinter import messagebox
 class GestoreEsercizi:
     def __init__(self):
         self.lista_esercizi = []
+        self.lista_esercizi_assegnati =  []
         
         
     def set_lista_esercizi(self, esercizi):
@@ -52,7 +53,39 @@ class GestoreEsercizi:
         for esercizio in self.lista_esercizi:
             if titolo == esercizio.get_titolo():
                 return esercizio
+            
+    def set_esercizi_assegnati(self, lista_esercizi_assegnati):
+        self.lista_esercizi_assegnati = lista_esercizi_assegnati
         
+    def get_esercizi_assegnati(self):
+        return self.lista_esercizi_assegnati
+    
+    def get_esercizi_assegnati_per_paziente(self, paziente):
+        # Filtra gli esercizi assegnati per l'ID del paziente
+        esercizi_filtrati = [
+            esercizio for esercizio in self.lista_esercizi_assegnati
+            if esercizio.get_paziente() == paziente
+        ]
+        return esercizi_filtrati
+    
+    
+    def aggiungi_esercizio_assegnato(self, paziente, esercizio):
+        from model.esercizio_assegnato import EsercizioAssegnato
+        from controller.gestore_dati import GestoreDati
+
+        esercizio_assegnato = EsercizioAssegnato(
+            esercizio.get_titolo(),
+            esercizio.get_descrizione(),
+            esercizio.get_video()
+        )
+        esercizio_assegnato.set_paziente(paziente)
+        esercizio_assegnato.set_stato("incompleto")  # Stato iniziale
+
+        self.lista_esercizi_assegnati.append(esercizio_assegnato)
+        GestoreDati().aggiungi_esercizio_assegnato(paziente.get_id(), esercizio.get_id())
+
+
+
         
         
         

@@ -249,7 +249,113 @@ class GestoreDati:
             WHERE id = ?
         ''', (esercizio.get_titolo(),esercizio.get_descrizione(), esercizio.get_video(), esercizio.get_id()))
         self.db.conn.commit()
+        
+    def get_esercizi_assegnati(self):
+        from model.esercizio_assegnato import EsercizioAssegnato
 
+        # Query per unire esercizio_assegnato con esercizi e recuperare i dati necessari
+        self.db.cursor.execute('''
+            SELECT 
+                ea.id_paziente,
+                ea.stato,
+                e.id AS esercizio_id,
+                e.titolo,
+                e.descrizione,
+                e.video_url
+            FROM esercizio_assegnato ea
+            INNER JOIN esercizi e ON ea.id_esercizio = e.id
+        ''')
+        rows = self.db.cursor.fetchall()
+
+        esercizi_assegnati = []
+
+        for row in rows:
+            id_paziente, stato, esercizio_id, titolo, descrizione, video_url = row
+
+            # Recupera l'oggetto Paziente
+            paziente = self.get_paziente_by_id(id_paziente)
+
+            # Creare l'oggetto EsercizioAssegnato
+            esercizio_assegnato = EsercizioAssegnato(titolo, descrizione, video_url)
+            esercizio_assegnato.set_id(esercizio_id)
+            esercizio_assegnato.set_stato(stato)
+            esercizio_assegnato.set_paziente(paziente)  # Assegna l'oggetto Paziente
+
+            esercizi_assegnati.append(esercizio_assegnato)
+
+        return esercizi_assegnati
+
+    
         
-        
-        
+    def get_paziente_by_id(self, id_paziente):
+        from model.paziente import Paziente
+
+        # Query per recuperare i dettagli del paziente
+        self.db.cursor.execute('''
+            SELECT id, nome, email, password, tipo 
+            FROM utenti
+            WHERE id = ?
+        ''', (id_paziente,))
+        row = self.db.cursor.fetchone()
+
+        if row:
+            id, nome, email, password, tipo = row  # Adatta al numero di colonne
+            if tipo != 'paziente':  # Assicurati che sia un paziente
+                return None
+            paziente = Paziente(nome, email, password)
+            paziente.set_id(id)
+            return paziente
+        return None
+
+    
+    def get_esercizi_assegnati_paziente(self, id_paziente):
+        from model.esercizio_assegnato import EsercizioAssegnato
+
+        # Query filtrata per un paziente specifico
+        self.db.cursor.execute('''
+            SELECT 
+                ea.id_paziente,
+                ea.stato,
+                e.id AS esercizio_id,
+                e.titolo,
+                e.descrizione,
+                e.video_url
+            FROM esercizio_assegnato ea
+            INNER JOIN esercizi e ON ea.id_esercizio = e.id
+            WHERE ea.id_paziente = ?
+        ''', (id_paziente,))
+        rows = self.db.cursor.fetchall()
+
+        esercizi_assegnati = []
+
+        # Recupera l'oggetto Paziente
+        paziente = self.get_paziente_by_id(id_paziente)
+
+        for row in rows:
+            _, stato, esercizio_id, titolo, descrizione, video_url = row
+
+            # Creare l'oggetto EsercizioAssegnato
+            esercizio_assegnato = EsercizioAssegnato(titolo, descrizione, video_url)
+            esercizio_assegnato.set_id(esercizio_id)
+            esercizio_assegnato.set_stato(stato)
+            esercizio_assegnato.set_paziente(paziente)  # Assegna l'oggetto Paziente
+
+            esercizi_assegnati.append(esercizio_assegnato)
+
+        return esercizi_assegnati
+
+
+    
+    
+    def aggiungi_esercizio_assegnato(self, id_paziente, id_esercizio, stato="incompleto"):
+        self.db.cursor.execute('''
+            INSERT INTO esercizio_assegnato (id_paziente, id_esercizio, stato)
+            VALUES (?, ?, ?)
+        ''', (id_paziente, id_esercizio, stato))
+        self.db.conn.commit()
+
+
+
+            
+            
+            

@@ -28,7 +28,7 @@ class FisioterapistaView(tk.Frame):
         
         button_font = ("Arial", 14, "bold") 
 
-        self.cerca_pazienti_button = ttk.Button(self.main_frame, text="Cerca Paziente", command=lambda: CercaPazienteView(0, self.root, self.fisioterapista, self.gestore), 
+        self.cerca_pazienti_button = ttk.Button(self.main_frame, text="Cerca Paziente", command=lambda: CercaPazienteView(0, self.root, self.fisioterapista, self.gestore, self.gestoreEsercizi), 
                                                 width=20, style='TButton')
         self.cerca_pazienti_button.pack(pady=20, ipadx=20, ipady=10)
 

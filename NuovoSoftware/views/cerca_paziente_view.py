@@ -6,9 +6,10 @@ from views.messaggi_view import MessaggiView
 
 # width=700, height=600
 class CercaPazienteView:
-    def __init__(self, flag, root, fisioterapista, gestore):
+    def __init__(self, flag, root, fisioterapista, gestore, gestoreEsercizi):
         self.root = root
         self.fisioterapista = fisioterapista
+        self.gestoreEsercizi = gestoreEsercizi
         search_window = tk.Toplevel(self.root)
         self.gestore = gestore
         self.flag = flag
@@ -88,7 +89,7 @@ class CercaPazienteView:
             nome = dati[0].split(": ")[1]  
             email = dati[1].split(": ")[1]  
             paziente = self.gestore.ottieni_paziente(nome, email)
-            ProfiloPaziente(self.root, paziente, self.gestore)
+            ProfiloPaziente(self.root, paziente, self.gestore, self.gestoreEsercizi)
             
     def apri_chat_paziente(self, event):
 

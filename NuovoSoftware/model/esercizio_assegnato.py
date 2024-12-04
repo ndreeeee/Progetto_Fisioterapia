@@ -15,4 +15,10 @@ class EsercizioAssegnato(Esercizio):
     
     def set_paziente(self, paziente):
         self.paziente = paziente
+        
+    def get_paziente(self):
+        return self.paziente
+    
+    def get_esercizio(self):
+        return self.esercizio
     

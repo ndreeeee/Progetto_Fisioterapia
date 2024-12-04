@@ -1,15 +1,13 @@
 import tkinter as tk
-
-from tkinter import scrolledtext  
 import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
+from tkinter import messagebox
 
 
 class GestisciEsercizi:
-    def __init__(self, root, paziente, fisioterapista):
+    def __init__(self, root, paziente, gestoreEsercizi):
         self.root = root
         self.paziente = paziente
-        self.fisioterapista = fisioterapista
+        self.gestoreEsercizi = gestoreEsercizi
         
         profilo_paziente_window = tk.Toplevel(self.root)
         profilo_paziente_window.title("Gestisci Esercizi del Paziente")
@@ -18,7 +16,7 @@ class GestisciEsercizi:
         esercizi_window.pack_propagate(False)
         esercizi_window.pack(pady=20, padx=20)
 
-        esercizi = self.paziente.get_esercizi()
+        esercizi = self.gestoreEsercizi.get_esercizi_assegnati_per_paziente(self.paziente)
 
         self.esercizi_listbox = tk.Listbox(esercizi_window, font=("Arial", 14), width=60, height=15)
         self.esercizi_listbox.pack(pady=10)
@@ -28,7 +26,7 @@ class GestisciEsercizi:
         else:
             for esercizio in esercizi:
                 
-                self.esercizi_listbox.insert(tk.END, f"{esercizio.titolo} - {esercizio.descrizione}")  
+                self.esercizi_listbox.insert(tk.END, f"{esercizio.get_titolo()} - {esercizio.get_descrizione()}")  
         
         stato_esercizio = ttk.Label(esercizi_window, text="", font=("Arial", 14), cursor="hand2")
         stato_esercizio.pack(pady=10)
@@ -67,7 +65,7 @@ class GestisciEsercizi:
 """
         self.esercizi_listbox.bind("<<ListboxSelect>>", mostra_video_caricato)
 
-    def rimuovi_esercizio_al_paziente(self, paziente, profilo_paziente_window):
+    def rimuovi_esercizio_al_paziente(self, paziente):
         selezione = self.esercizi_listbox.curselection()
 
         if selezione:
@@ -103,10 +101,10 @@ class GestisciEsercizi:
         label = tk.Label(aggiungi_frame, text = "Clicca l'esercizio da assegnare al paziente:", font = ("Arial",16, "bold"))
         label.pack(pady=10)
 
-        esercizi_assegnati = self.paziente.get_esercizi()
+        esercizi_assegnati = self.gestoreEsercizi.get_esercizi_assegnati_per_paziente(self.paziente)
         
         
-        esercizi_predefiniti = self.fisioterapista.get_esercizi()
+        esercizi_predefiniti = self.gestoreEsercizi.get_esercizi()
         
         titoli_assegnati = {esercizio.titolo for esercizio in esercizi_assegnati}
         esercizi_disponibili = [esercizio for esercizio in esercizi_predefiniti if esercizio.titolo not in titoli_assegnati]
@@ -125,7 +123,7 @@ class GestisciEsercizi:
                 
                 
                 
-                self.fisioterapista.aggiungi_esercizio_paziente(paziente, esercizio_selezionato)
+                self.gestoreEsercizi.aggiungi_esercizio_assegnato(self.paziente, esercizio_selezionato)
                 self.esercizi_listbox.insert(tk.END, f"{esercizio_selezionato.titolo}: {esercizio_selezionato.descrizione}")
                 
                 messagebox.showinfo("Successo", f"Esercizio '{esercizio_selezionato.titolo}' assegnato con successo.")

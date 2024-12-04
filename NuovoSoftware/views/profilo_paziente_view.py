@@ -6,10 +6,11 @@ from views.modifica_paziente_view import ModificaPaziente
 from views.gestisci_esercizi_paziente_view import GestisciEsercizi
 
 class ProfiloPaziente:
-    def __init__(self, root, paziente, gestore):
+    def __init__(self, root, paziente, gestore, gestoreEsercizi):
         self.root = root
         self.paziente = paziente
         self.gestore = gestore
+        self.gestoreEsercizi = gestoreEsercizi
         
         search_frame = tk.Toplevel(self.root)
         search_frame.title(f"Profilo di {paziente.nome}")
@@ -45,7 +46,7 @@ class ProfiloPaziente:
         ttk.Button(profilo_paziente_window, text="Cartella Clinica", 
                 command=lambda: CartellaClinicaFisio(self.root, self.paziente, self.gestore), style="TButton").pack(pady=20, ipadx=20, ipady=10)
         ttk.Button(profilo_paziente_window, text="Gestisci Esercizi", 
-                command=lambda: GestisciEsercizi(self.root, self.paziente), style="TButton").pack(pady=20, ipadx=20, ipady=10)
+                command=lambda: GestisciEsercizi(self.root, self.paziente, self.gestoreEsercizi), style="TButton").pack(pady=20, ipadx=20, ipady=10)
 
         # Pulsante per modificare il paziente
         ttk.Button(profilo_paziente_window, text="Modifica Paziente", 

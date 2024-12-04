@@ -78,7 +78,8 @@ class GestoreFisioterapista:
                 
                 
     def modifica_cartella_clinica(self, paziente, descrizione):
-        cartella = paziente.aggiorna_cartella(descrizione)
+        cartella = paziente.get_cartella_clinica()
+        paziente.aggiorna_cartella(descrizione)
         GestoreDati().modifica_cartella(cartella.get_id(), descrizione)
         
         
