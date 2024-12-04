@@ -119,7 +119,6 @@ class GestoreDati:
         from model.paziente import Paziente
         from model.cartella_clinica import CartellaClinica
 
-        # Query per ottenere i pazienti e le loro cartelle cliniche
         query = '''
             SELECT 
                 utenti.id AS paziente_id,
@@ -152,6 +151,8 @@ class GestoreDati:
             pazienti.append(paziente)
 
         return pazienti
+    
+    
 
         
     
@@ -362,6 +363,24 @@ class GestoreDati:
             ''', (id,))
             
         self.db.conn.commit()
+        
+    def get_cartella_clinica_utente(self, id):
+        from model.cartella_clinica import CartellaClinica
+        self.db.cursor.execute('''
+            SELECT * FROM cartella_clinica
+            WHERE id_paziente = ?
+        ''', (id,))
+        cartella = self.db.cursor.fetchone()
+        print("dati", cartella)
+
+        if cartella:
+            cartella_clinica = CartellaClinica(cartella[2])
+            cartella_clinica.set_id(cartella[0])
+            print("dati", cartella_clinica)
+            # Restituisce la descrizione della cartella clinica
+            return cartella_clinica
+                
+          
 
 
 

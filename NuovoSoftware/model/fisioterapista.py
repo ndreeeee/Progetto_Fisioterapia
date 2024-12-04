@@ -11,20 +11,6 @@ class Fisioterapista(Utente):
         super().__init__(nome, email, password)
         
         
-        
-        
-        
-  
-    
-    
-    
-            
-   
-    
-            
-   
-    
-    
     def cerca_esercizio (self, query):
         
         risultati = [

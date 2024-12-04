@@ -32,7 +32,10 @@ class GestoreLogin:
                     FisioterapistaView(root, utente, gestore, gestoreEsercizi)  
 
                 elif isinstance(utente, Paziente):
+                    gestore = GestorePaziente()
+                    gestore.set_esercizi_assegnati(GestoreDati().get_esercizi_assegnati())
+                    gestore.set_cartella(GestoreDati().get_cartella_clinica_utente(utente.get_id()))
                     from views.paziente_view import PazienteView
-                    PazienteView(root, utente)  
+                    PazienteView(root, utente, gestore)  
                 return
         messagebox.showerror("Errore", "Credenziali errate. Riprova.")

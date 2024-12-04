@@ -12,12 +12,11 @@ from views.mostra_esercizi_assegnati_paziente_view import MostraEserciziAssegnat
 
 
 class PazienteView(tk.Frame):
-    def __init__(self, root, paziente, fisioterapista, posti_disponibili): 
+    def __init__(self, root, paziente, gestore): 
         super().__init__(root)  
         self.root = root
         self.paziente = paziente
-        self.posti_disponibili = posti_disponibili  
-        self.fisioterapista = fisioterapista
+        self.gestore = gestore
         
         self.main_frame = tk.Frame(self.root, width=900, height=700)
         self.main_frame.pack_propagate(False) 
@@ -50,7 +49,7 @@ class PazienteView(tk.Frame):
         """
         
 
-        self.cartella_clinica_btn = ttk.Button(self.main_frame, text="Cartella Clinica", command= lambda: CartellaClinicaPaziente(self.root, self.paziente), width=20, style='TButton')
+        self.cartella_clinica_btn = ttk.Button(self.main_frame, text="Cartella Clinica", command= lambda: CartellaClinicaPaziente(self.root, self.paziente, self.gestore), width=20, style='TButton')
         self.cartella_clinica_btn.pack(pady=20, ipadx=20, ipady=10)
         
         self.messaggi_btn = ttk.Button(self.main_frame, text="Prenotazione", command=lambda: PrenotazioniView(self.root, self.paziente, self.posti_disponibili), width=20, style='TButton')
@@ -59,7 +58,7 @@ class PazienteView(tk.Frame):
         self.messaggi_btn = ttk.Button(self.main_frame, text="Messaggi", command=lambda: MessaggiView(tk.Tk(), paziente, self.fisioterapista, 0), width=20, style='TButton')
         self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
 
-        self.esercizi_btn = ttk.Button(self.main_frame, text="Esercizi", command=lambda: MostraEserciziAssegnatiView(self.root,self.paziente), width=20, style='TButton')
+        self.esercizi_btn = ttk.Button(self.main_frame, text="Esercizi", command=lambda: MostraEserciziAssegnatiView(self.root,self.paziente, self.gestore), width=20, style='TButton')
         self.esercizi_btn.pack(pady=20, ipadx=20, ipady=10)
 
         

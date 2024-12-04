@@ -1,15 +1,13 @@
 import tkinter as tk
-from tkinter import scrolledtext
 from tkinter import font
-import tkinter.ttk as ttk
 from views.mostra_dettagli_esercizio_paziente_view import MostraDettagliEsercizioPazienteView
 
 
 class MostraEserciziAssegnatiView():
-    def __init__(self, root, paziente):
+    def __init__(self, root, paziente, gestore):
         self.root = root
         self.paziente = paziente
-        
+        self.gestore = gestore
         
         search_window = tk.Toplevel(self.root)
         search_window.title("Esercizi assegnati")
@@ -26,7 +24,8 @@ class MostraEserciziAssegnatiView():
         label.pack(pady=10)
 
 
-        esercizi = self.paziente.esercizi_assegnati
+        esercizi = self.gestore.get_esercizi_assegnati(self.paziente)
+        print("view", esercizi)
 
         self.esercizi_listbox = tk.Listbox(search_frame, font=testo_font, bg="#ffffff", fg="#333333", height=15, width = 80, bd=2)
         self.esercizi_listbox.pack(pady=20)
@@ -34,10 +33,7 @@ class MostraEserciziAssegnatiView():
         if not esercizi:
             tk.Label(search_frame, text="Nessun esercizio assegnato.", font=titolo_font, bg="#f0f0f0").pack(pady=10)
         else:
-            self.esercizi_data = {}
             for esercizio in esercizi:
-                
-                
                 self.esercizi_listbox.insert(tk.END, f"{esercizio.titolo}")
                 
             self.esercizi_listbox.bind("<<ListboxSelect>>", self.mostra_dettagli_esercizio)

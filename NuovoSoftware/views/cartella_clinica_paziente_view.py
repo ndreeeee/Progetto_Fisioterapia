@@ -5,9 +5,10 @@ import tkinter.ttk as ttk
 from tkinter import font, messagebox, filedialog as fd
 
 class CartellaClinicaPaziente:
-    def __init__(self, root, paziente):
+    def __init__(self, root, paziente, gestore):
         self.root = root
         self.paziente = paziente
+        self.gestore = gestore
         
         print("Mostra cartella clinica chiamato")  
         
@@ -15,10 +16,10 @@ class CartellaClinicaPaziente:
         cartella_window.title("Cartella Clinica")
         cartella_window.geometry("900x700")
 
-        cartella_clinica = self.paziente.cartella_clinica
+        cartella_clinica = self.gestore.get_cartella()
 
         if cartella_clinica:
-            cartella_info = f"{cartella_clinica.descrizione}"
+            cartella_info = f"{cartella_clinica.get_descrizione()}"
             informazioni_label = ttk.Label(cartella_window, text="Cartella Clinica", font=("Arial", 14))
             informazioni_label.pack(pady=10)
         else:
