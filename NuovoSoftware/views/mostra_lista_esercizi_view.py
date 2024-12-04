@@ -8,9 +8,10 @@ from views.mostra_form_aggiungi_esercizio_view import MostraFormAggiungiEsercizi
 from views.mostra_dettagli_esercizio_view import VisualizzaDettagliEsercizio
 
 class MostraListaEsercizi:
-    def __init__(self, root, fisioterapista):
+    def __init__(self, root, fisioterapista, gestoreEsercizi):
         self.root = root
         self.fisioterapista = fisioterapista
+        self.gestoreEsercizi = gestoreEsercizi
         
         
         form_window = tk.Toplevel(self.root)
@@ -28,7 +29,7 @@ class MostraListaEsercizi:
         self.spazio.pack(expand=True)
 
         
-        esercizi = self.fisioterapista.lista_esercizi
+        esercizi = self.gestoreEsercizi.get_esercizi()
 
       
         self.search_frame = ttk.Frame(self.main_frame)
@@ -55,12 +56,12 @@ class MostraListaEsercizi:
             
 
 
-        self.listbox.bind("<Double-1>", lambda event: self.mostra_dettagli_esercizio(self.listbox, self.esercizi_data, event))
+        self.listbox.bind("<Double-1>", lambda event: self.mostra_dettagli_esercizio(self.listbox, event))
 
         back_button = ttk.Button(self.main_frame, text="Torna Indietro", command=form_window.destroy)
         back_button.pack(pady=20, ipadx=10, ipady=5)
 
-        aggiungi_button = ttk.Button(self.main_frame, text="Aggiungi Esercizio", command=lambda: MostraFormAggiungiEsercizio(self.root, fisioterapista))
+        aggiungi_button = ttk.Button(self.main_frame, text="Aggiungi Esercizio", command=lambda: MostraFormAggiungiEsercizio(self.root, fisioterapista, self.gestoreEsercizi))
         aggiungi_button.pack(pady=20, ipadx=10, ipady=5)
 
         remove_button = ttk.Button(self.main_frame, text="Rimuovi Esercizio", command=lambda:self.rimuovi_esercizio_lista(self.listbox))
@@ -68,6 +69,16 @@ class MostraListaEsercizi:
 
         self.spazio2 = ttk.Label(self.main_frame)
         self.spazio2.pack(expand=True)
+        
+        self.visualizza_esercizi()
+        
+        
+        
+    def visualizza_esercizi(self):
+        self.listbox.delete(0, tk.END)
+        lista_esercizi = self.gestoreEsercizi.get_esercizi()
+        for esercizio in lista_esercizi:
+            self.listbox.insert(tk.END, f"{esercizio.titolo}")
         
         
     def cerca_esercizi(self, event=None):
@@ -102,22 +113,22 @@ class MostraListaEsercizi:
                 
                 conferma = messagebox.askyesno("Conferma", f"Sei sicuro di voler eliminare l'esercizio '{esercizio}'?")
                 if conferma:
-                    self.fisioterapista.elimina_esercizio(esercizio)
+                    self.gestoreEsercizi.elimina_esercizio(esercizio)
 
                     self.listbox.delete(indice)
             else:
                 messagebox.showerror("Errore", "Seleziona un esercizio da eliminare.")
             
                 
-    def mostra_dettagli_esercizio(self, listbox, esercizi_data, event):
+    def mostra_dettagli_esercizio(self, listbox, event):
             
             try:
                 selezione = listbox.curselection()  
                 if selezione:
                     indice = selezione[0]  
                     esercizio = listbox.get(indice) 
-                    ex_dettagli = self.fisioterapista.ottieni_esercizio(esercizio)
+                    ex_dettagli = self.gestoreEsercizi.ottieni_esercizio(esercizio)
                     
-                    VisualizzaDettagliEsercizio(ex_dettagli, self.root, self.fisioterapista)
+                    VisualizzaDettagliEsercizio(ex_dettagli, self.root, self.gestoreEsercizi)
             except Exception as e:
                 print(f"Errore durante la visualizzazione dei dettagli dell'esercizio: {e}")

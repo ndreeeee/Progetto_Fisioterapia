@@ -34,29 +34,11 @@ class Fisioterapista(Utente):
         
         return risultati
     
-    def elimina_esercizio(self, titolo):
-        for esercizio in self.lista_esercizi:
-            if esercizio.titolo == titolo:
-                self.lista_esercizi.remove(esercizio)
-                
-                break
+    
             
-    def ottieni_esercizio(self, titolo):
-        for esercizio in self.lista_esercizi:
-            if titolo == esercizio.titolo:
-                return esercizio
+    
             
-    def modifica_esercizio(self, titolo, descrizione, video, esercizio):
-        
-        for esercizio in self.lista_esercizi:
-            if esercizio.titolo == titolo:
-                self.lista_esercizi.remove(esercizio)
-            
-        esercizio.titolo = titolo
-        esercizio.descrizione = descrizione
-        esercizio.video = video
-        
-        self.lista_esercizi.append(Esercizio(titolo, descrizione, video))
+    
         
                 
     
@@ -76,8 +58,7 @@ class Fisioterapista(Utente):
         
 
             
-    def get_esercizi(self):
-        return self.lista_esercizi
+    
             
     def aggiungi_esercizio_paziente(self, paziente1, esercizio):
         for paziente in self.lista_pazienti:

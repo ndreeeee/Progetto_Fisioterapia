@@ -14,12 +14,6 @@ class LoginView:
 
         self.root.configure(bg="#f4f4f4")
         
-        gestore = GestorePrenotazioni()
-        
-        gestore.aggiorna_prenotazioni_future()
-        self.posti_disponibili = gestore.get_prenotazioni_disponibili()
-        self.posti_prenotati = gestore.get_posti_prenotati()
-        
         font_label = ("Helvetica", 14, "bold")
         font_entry = ("Helvetica", 14)
         btn_style = ttk.Style()

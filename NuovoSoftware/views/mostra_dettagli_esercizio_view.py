@@ -1,15 +1,12 @@
 import tkinter as tk
-
-from tkinter import scrolledtext  
-import tkinter.ttk as ttk
-from tkinter import font, messagebox, simpledialog, filedialog
+from tkinter import font, messagebox
 
 class VisualizzaDettagliEsercizio:
-    def __init__ (self, esercizio, root, fisioterapista):
+    def __init__ (self, esercizio, root, gestoreEsercizi):
         self.esercizio = esercizio
         self.file_video_path = ""
         self.root = root
-        self.fisioterapista = fisioterapista
+        self.gestoreEsercizi = gestoreEsercizi
         
         dettagli_window = tk.Toplevel(self.root)
         dettagli_window.title(f"Dettagli Esercizio: {esercizio.titolo}")
@@ -70,7 +67,7 @@ class VisualizzaDettagliEsercizio:
             nuova_descrizione = descrizione_text.get("1.0", tk.END).strip()  
 
             if nuovo_titolo != esercizio.titolo or nuova_descrizione != esercizio.descrizione or self.file_video_path != esercizio.video:
-                self.fisioterapista.modifica_esercizio(nuovo_titolo, nuova_descrizione, self.file_video_path, esercizio)
+                self.gestoreEsercizi.modifica_esercizio(nuovo_titolo, nuova_descrizione, self.file_video_path, esercizio)
                 dettagli_window.destroy() 
             else:
                 messagebox.showerror("Nessuna modifica da salvare.")

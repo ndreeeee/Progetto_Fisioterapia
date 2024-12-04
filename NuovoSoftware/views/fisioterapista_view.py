@@ -9,11 +9,12 @@ from views.prenotazioni_fisio_view import PrenotazioniFisio
 
 # width=700, height=600
 class FisioterapistaView(tk.Frame):
-    def __init__(self, root, fisioterapista, gestore):
+    def __init__(self, root, fisioterapista, gestore, gestoreEsercizi):
         self.root = root
         self.file_video_path = ""
         self.fisioterapista = fisioterapista
         self.gestore = gestore
+        self.gestoreEsercizi = gestoreEsercizi
 
         self.main_frame = tk.Frame(self.root, width=900, height=700)
         self.main_frame.pack_propagate(False)  
@@ -34,7 +35,7 @@ class FisioterapistaView(tk.Frame):
         self.aggiungi_paziente_button = ttk.Button(self.main_frame, text="Aggiungi Paziente", command=lambda: AggiungiPazienteView(self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
         self.aggiungi_paziente_button.pack(pady=20, ipadx=20, ipady=10)
         
-        self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
+        self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, self.fisioterapista, self.gestoreEsercizi), width=20, style='TButton')
         self.mostra_esercizi_button.pack(pady=20, ipadx=20, ipady=10)
         
         self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, self.fisioterapista, self.gestore), width=20, style='TButton')

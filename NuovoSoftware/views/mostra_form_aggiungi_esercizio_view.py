@@ -1,13 +1,13 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import simpledialog
-from controller.gestore_esercizi import GestoreEsercizi
 
 class MostraFormAggiungiEsercizio:
-    def __init__(self, root, fisioterapista):
+    def __init__(self, root, fisioterapista, gestoreEsercizi):
         self.root = root
         self.fisioterapista = fisioterapista
         self.file_video_path = "Nessun video inserito"
+        self.gestoreEsercizi = gestoreEsercizi
         
 
         form_window = tk.Toplevel(self.root)
@@ -39,9 +39,9 @@ class MostraFormAggiungiEsercizio:
         self.file_label = ttk.Label(self.main_frame, text= self.file_video_path, font=("Arial", 12)).pack(pady=5)
         
         submit_button = ttk.Button(self.main_frame, text="Aggiungi Esercizio", 
-                                  command=lambda: GestoreEsercizi().aggiungi_esercizio(titolo_entry.get(), 
+                                  command=lambda: gestoreEsercizi.aggiungi_esercizio(titolo_entry.get(), 
                                                                           descrizione_entry.get(), 
-                                                                          self.file_video_path, form_window, self.fisioterapista))
+                                                                          self.file_video_path, form_window))
         submit_button.pack(pady=20, ipadx=10, ipady=5)
         
         back_button = ttk.Button(self.main_frame, text="Torna Indietro", command=form_window.destroy)

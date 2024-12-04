@@ -216,7 +216,39 @@ class GestoreDati:
         return prenotazioni
     
     
-  
+    def carica_esercizi(self):
+        from model.esercizio import Esercizio
+        
+        self.db.cursor.execute ("SELECT * FROM esercizi")
+        rows = self.db.cursor.fetchall()
+        
+        esercizi = []
+        
+        for row in rows:
+            
+            esercizio = Esercizio(row[1], row[2], row[3])
+            esercizio.set_id(row[0])
+            
+            esercizi.append(esercizio)
+        
+        return esercizi
+    
+    def elimina_esercizio(self, id):
+        self.db.cursor.execute('''
+                DELETE FROM esercizi
+                WHERE id = ? 
+            ''', (id,))
+            
+        self.db.conn.commit()
+        
+    def modifica_esercizio(self, esercizio):
+        
+        self.db.cursor.execute('''
+            UPDATE esercizi
+            SET  titolo = ?, descrizione = ?, video_url = ?
+            WHERE id = ?
+        ''', (esercizio.get_titolo(),esercizio.get_descrizione(), esercizio.get_video(), esercizio.get_id()))
+        self.db.conn.commit()
 
         
         
