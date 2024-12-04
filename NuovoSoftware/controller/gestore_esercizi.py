@@ -40,10 +40,8 @@ class GestoreEsercizi:
         
         for esercizio in self.lista_esercizi:
             if esercizio.get_titolo() == esercizio1.titolo:
-            
-                esercizio.set_titolo(titolo)
-                esercizio.set_descrizione(descrizione)
-                esercizio.set_video(video)
+                esercizio.set_modifica_esercizio(titolo, descrizione, video)
+                
                 GestoreDati().modifica_esercizio(esercizio)
                 
         messagebox.showinfo("Successo", "Esercizio modificato con successo!!")
@@ -64,7 +62,7 @@ class GestoreEsercizi:
         # Filtra gli esercizi assegnati per l'ID del paziente
         esercizi_filtrati = [
             esercizio for esercizio in self.lista_esercizi_assegnati
-            if esercizio.get_paziente() == paziente
+            if esercizio.get_paziente().get_id() == paziente.get_id()  # Confronta gli ID
         ]
         return esercizi_filtrati
     
@@ -83,6 +81,14 @@ class GestoreEsercizi:
 
         self.lista_esercizi_assegnati.append(esercizio_assegnato)
         GestoreDati().aggiungi_esercizio_assegnato(paziente.get_id(), esercizio.get_id())
+        
+    
+    def rimuovi_esercizio_assegnato(self, titolo):
+        for esercizio in self.lista_esercizi_assegnati:
+           if esercizio.get_titolo() == titolo:
+               self.lista_esercizi_assegnati.remove(esercizio)
+               print("Gestore", esercizio)
+               GestoreDati().rimuovi_esercizio_assegnato(esercizio.get_id())
 
 
 

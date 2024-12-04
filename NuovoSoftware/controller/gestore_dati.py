@@ -283,6 +283,7 @@ class GestoreDati:
 
             esercizi_assegnati.append(esercizio_assegnato)
 
+        print(esercizi_assegnati)
         return esercizi_assegnati
 
     
@@ -352,6 +353,14 @@ class GestoreDati:
             INSERT INTO esercizio_assegnato (id_paziente, id_esercizio, stato)
             VALUES (?, ?, ?)
         ''', (id_paziente, id_esercizio, stato))
+        self.db.conn.commit()
+        
+    def rimuovi_esercizio_assegnato(self, id):
+        self.db.cursor.execute('''
+                DELETE FROM esercizio_assegnato
+                WHERE id_esercizio = ? 
+            ''', (id,))
+            
         self.db.conn.commit()
 
 

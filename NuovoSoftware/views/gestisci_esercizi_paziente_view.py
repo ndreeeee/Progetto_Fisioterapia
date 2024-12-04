@@ -17,6 +17,7 @@ class GestisciEsercizi:
         esercizi_window.pack(pady=20, padx=20)
 
         esercizi = self.gestoreEsercizi.get_esercizi_assegnati_per_paziente(self.paziente)
+        
 
         self.esercizi_listbox = tk.Listbox(esercizi_window, font=("Arial", 14), width=60, height=15)
         self.esercizi_listbox.pack(pady=10)
@@ -26,7 +27,9 @@ class GestisciEsercizi:
         else:
             for esercizio in esercizi:
                 
-                self.esercizi_listbox.insert(tk.END, f"{esercizio.get_titolo()} - {esercizio.get_descrizione()}")  
+                self.esercizi_listbox.insert(tk.END, f"{esercizio.get_titolo()} - {esercizio.get_descrizione()}") 
+                print(f"Titolo: {esercizio.get_titolo()}, Descrizione: {esercizio.get_descrizione()}")
+ 
         
         stato_esercizio = ttk.Label(esercizi_window, text="", font=("Arial", 14), cursor="hand2")
         stato_esercizio.pack(pady=10)
@@ -36,36 +39,19 @@ class GestisciEsercizi:
                 style="TButton").pack(pady=10, ipadx=10, ipady=5)
 
         rimuovi_button = ttk.Button(esercizi_window, text="Rimuovi Esercizio",
-                                    command=lambda: self.rimuovi_esercizio_al_paziente(self.paziente, profilo_paziente_window),
+                                    command=lambda: self.rimuovi_esercizio_al_paziente(),
                                     style="TButton")
         rimuovi_button.pack(pady=10, ipadx=10, ipady=5)
 
-        def mostra_video_caricato(event):
-            selezione = self.esercizi_listbox.curselection()
-            if selezione:
-                indice = selezione[0]
-                esercizio_selezionato = self.esercizi_listbox.get(indice)
-                id_esercizio = int(esercizio_selezionato.split(":")[0])
                 
-                """                
-                percorso_video = self.controller.ottieni_url_video_paziente(id_paziente, id_esercizio)
-                
-              
-                if percorso_video:
-                    video_paziente.config(text=f"Video Caricato: {percorso_video}", foreground="blue", cursor="hand2")
-                    video_paziente.bind("<Button-1>", lambda e: self.apri_url(percorso_video))
-                else:
-                    video_paziente.config(text="Il paziente non ha caricato nessun video per questo esercizio.", foreground="blue", cursor="hand2")
-                
+        """
+        if self.controller.db.ottieni_stato_esercizio(id_paziente, id_esercizio) == 'completato':
+            stato_esercizio.config(text="Il paziente ha completato l'esercizio", cursor="hand2", foreground="green")
+        else:
+            stato_esercizio.config(text="Il paziente NON ha ancora completato l'esercizio", cursor="hand2", foreground="red")
+            """
 
-                if self.controller.db.ottieni_stato_esercizio(id_paziente, id_esercizio) == 'completato':
-                    stato_esercizio.config(text="Il paziente ha completato l'esercizio", cursor="hand2", foreground="green")
-                else:
-                    stato_esercizio.config(text="Il paziente NON ha ancora completato l'esercizio", cursor="hand2", foreground="red")
-"""
-        self.esercizi_listbox.bind("<<ListboxSelect>>", mostra_video_caricato)
-
-    def rimuovi_esercizio_al_paziente(self, paziente):
+    def rimuovi_esercizio_al_paziente(self):
         selezione = self.esercizi_listbox.curselection()
 
         if selezione:
@@ -75,8 +61,8 @@ class GestisciEsercizi:
             conferma = messagebox.askyesno("Conferma", f"Sei sicuro di voler rimuovere l'esercizio '{titolo_esercizio}'?")
 
             if conferma:
-                
-                self.fisioterapista.rimuovi_esercizio_paziente(paziente, esercizio_selezionato)
+                print("view", esercizio_selezionato)
+                self.gestoreEsercizi.rimuovi_esercizio_assegnato(titolo_esercizio)
 
                 self.esercizi_listbox.delete(selezione[0])
 

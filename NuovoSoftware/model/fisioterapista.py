@@ -67,12 +67,7 @@ class Fisioterapista(Utente):
                 paziente.add_esercizio(esercizio_assegnato)
                 
                 
-    def rimuovi_esercizio_paziente (self, paziente1, titolo):
-        for paziente in self.lista_pazienti:
-            if paziente1 == paziente:
-                for esercizio in self.lista_esercizi:
-                    if titolo == esercizio.titolo:
-                        paziente.remove_esercizio(esercizio)
+    
                         
                         
     

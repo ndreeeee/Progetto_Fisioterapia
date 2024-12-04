@@ -10,6 +10,12 @@ class Esercizio:
         self.titolo = titolo
         self.video = video
         
+        
+    def set_modifica_esercizio(self, titolo, descrizione, video):
+        self.descrizione = descrizione
+        self.titolo = titolo
+        self.video = video
+        
     def get_id(self):
         return self.id
 
