@@ -36,21 +36,18 @@ class MostraDettagliEsercizioPazienteView():
         video_url.bind("<Button-1>", lambda e: self.apri_url(self.esercizio.get_video()))
 
 
-        stato_var = tk.IntVar()
+        self.stato_var = 0
         
         stato_corrente = self.esercizio.get_stato()
-        print("stato ottenuto")
         
-        if stato_corrente == 'completato':
-            stato_var.set(1)
-        else:
-            stato_var.set(0)
+        self.stato_var = tk.IntVar(value=1 if stato_corrente == 'completato' else 0)
+
             
     
-        completato_checkbox = tk.Checkbutton(dettagli_frame, text="Esercizio Completato", variable=stato_var, font=testo_font, bg="#f0f0f0")
+        completato_checkbox = tk.Checkbutton(dettagli_frame, text="Esercizio Completato", variable=self.stato_var, font=testo_font, bg="#f0f0f0")
         completato_checkbox.pack(pady=20)
         
-        aggiorna_stato_button = tk.Button(dettagli_frame, text="Aggiorna Stato", command=lambda: self.gestore.aggiorna_stato_esercizio(self.esercizio, stato_var),
+        aggiorna_stato_button = tk.Button(dettagli_frame, text="Aggiorna Stato", command=lambda: self.gestore.aggiorna_stato_esercizio(self.paziente, self.esercizio, self.stato_var),
                                         bg="#4CAF50", fg="white", font=testo_font, bd=0, relief="flat", padx=20, pady=10)
         aggiorna_stato_button.pack(pady=15)
 

@@ -21,9 +21,6 @@ class Utente:
     def set_id(self, id):
         self.id = id
         
-    def invia_messaggio(self, mittente, destinatario, testo):
-        Messaggio(testo, destinatario, mittente)
-        
     def set_nome(self,nome):
         self.nome = nome
     def get_nome(self):

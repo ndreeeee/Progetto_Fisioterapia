@@ -1,19 +1,17 @@
 import tkinter as tk
 from tkinter import scrolledtext
-from model.messaggio import Messaggio
 from tkinter import font
 import tkinter.ttk as ttk
-
-
-
-
-
+from controller.gestore_messaggi import GestoreMessaggi
+from controller.gestore_dati import GestoreDati
 
 
 class MessaggiView:
     
     
     def __init__(self, root, paziente, fisioterapista, flag):
+        self.gestore = GestoreMessaggi()
+        self.gestore.set_messaggi(GestoreDati().carica_messaggi())
         self.root = root
         self.paziente = paziente
         self.fisioterapista = fisioterapista
@@ -92,9 +90,9 @@ class MessaggiView:
                 return
             
             if flag == 1:
-                self.fisioterapista.invia_messaggio(self.fisioterapista, self.paziente, testo)
+                self.gestore.invia_messaggio(self.fisioterapista, self.paziente, testo)
             else:
-                self.paziente.invia_messaggio(self.paziente, self.fisioterapista, testo)
+                self.gestore.invia_messaggio(self.paziente, self.fisioterapista, testo)
                 
             self.input_text.delete(0, tk.END)  # Pulisce l'area di input dopo l'invio
 
@@ -110,15 +108,14 @@ class MessaggiView:
         self.chat_area.config(state='normal')
         self.chat_area.delete(1.0, tk.END)
 
-        db = Database()
-        messaggi = db.ottieni_messaggi(fisioterapista, paziente)
-
+        messaggi = self.gestore.ottieni_messaggi(fisioterapista, paziente)
+        print("view", messaggi)
         for messaggio in messaggi:
-            
-            if isinstance(messaggio.mittente, Fisioterapista):
-                self.chat_area.insert(tk.END, f"{fisioterapista.nome} ({messaggio.data_invio}): {messaggio.descrizione}\n")
-            if isinstance(messaggio.mittente, Paziente):
-                self.chat_area.insert(tk.END, f"{paziente.nome} ({messaggio.data_invio}): {messaggio.descrizione}\n")
+            print ("view", messaggio.get_descrizione)
+            if isinstance(messaggio.get_mittente(), Fisioterapista):
+                self.chat_area.insert(tk.END, f"{fisioterapista.get_nome()} ({messaggio.get_data_invio()}): {messaggio.get_descrizione()}\n")
+            if isinstance(messaggio.get_mittente(), Paziente):
+                self.chat_area.insert(tk.END, f"{paziente.get_nome()} ({messaggio.get_data_invio()}): {messaggio.get_descrizione()}\n")
 
         self.chat_area.config(state='disabled')
 

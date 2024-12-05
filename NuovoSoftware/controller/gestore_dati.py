@@ -7,6 +7,14 @@ class GestoreDati:
         self.db = Database()
 
     
+    
+    def inserisci_esercizio(self, titolo, descrizione, video):
+        self.db.cursor.execute('''
+                INSERT INTO esercizi (titolo, descrizione, video)
+                VALUES (?, ?, ?)
+            ''', (titolo, descrizione, video))
+        self.db.conn.commit()
+        
     def get_esercizi(self):
         from model.esercizio import Esercizio
         
@@ -21,57 +29,6 @@ class GestoreDati:
     
         return esercizi
     
-    
-    def inserisci_esercizio(self, titolo, descrizione, video):
-        self.db.cursor.execute('''
-                INSERT INTO esercizi (titolo, descrizione, video_url)
-                VALUES (?, ?, ?)
-            ''', (titolo, descrizione, video))
-        self.db.conn.commit()
-    
-    def ottieni_messaggi(self, fisioterapista, paziente):
-        from model.messaggio import Messaggio
-        
-        
-        self.db.cursor.execute("SELECT * FROM messaggi")
-        rows = self.db.cursor.fetchall()
-
-        
-        messaggi = []
-        
-        for row in rows:
-            
-            self.db.cursor.execute('SELECT * FROM utenti WHERE id=?', (row[2],))  # destinatario_id
-            destinatario = self.db.cursor.fetchone()
-             
-            if destinatario[4] == 'fisioterapista':
-                messaggio = Messaggio(row[3], fisioterapista, paziente, row[4])  
-                messaggi.append(messaggio)            
-            else:
-                messaggio = Messaggio(row[3], paziente, fisioterapista, row[4])  
-                messaggi.append(messaggio)     
-                
-             
-          
-            
-
-        
-            # Filtra i messaggi rilevanti tra fisioterapista e paziente
-        messaggi_filtrati = [
-            m for m in messaggi
-            if (m.mittente == fisioterapista and m.destinatario == paziente) or
-            (m.mittente == paziente and m.destinatario == fisioterapista)
-        ]
-
-        return messaggi_filtrati
-
-        
-    def salva_messaggio(self, mittente, destinatario, testo):
-        self.db.cursor.execute('''
-                INSERT INTO messaggi (mittente_id, destinatario_id, messaggio)
-                VALUES (?, ?, ?)
-            ''', (mittente, destinatario, testo))
-        self.db.conn.commit()
 
         
     def aggiungi_utente(self, nome, email, password, tipo):
@@ -380,16 +337,96 @@ class GestoreDati:
             # Restituisce la descrizione della cartella clinica
             return cartella_clinica
         
-    def aggiorna_stato(self, esercizio, stato):
+    def aggiorna_stato(self, paziente, esercizio, stato):
         
         self.db.cursor.execute('''
-            UPDATE esercizi0_assegnato
+            UPDATE esercizio_assegnato
             SET  stato = ?
-            WHERE id = ?
-        ''', (stato,  esercizio.get_id()))
+            WHERE id_esercizio = ? AND id_paziente = ?
+        ''', (stato,  esercizio.get_id(), paziente.get_id()))
         self.db.conn.commit()
+        
+    def get_fisioterapista(self):
+        from model.fisioterapista import Fisioterapista
+        self.db.cursor.execute('SELECT * FROM utenti WHERE tipo = "fisioterapista"')
+        row = self.db.cursor.fetchone()
+        
+        fisioterapista = Fisioterapista(row[1], row[2], row[3])
+        fisioterapista.set_id(row[0])
+        return fisioterapista
 
+    
+ 
 
-            
-            
-            
+    def carica_messaggi(self):
+        from model.messaggio import Messaggio
+        
+
+        try:
+            # Recupera tutti i messaggi dal database
+            self.db.cursor.execute("SELECT * FROM messaggi")
+            rows = self.db.cursor.fetchall()
+
+            messaggi = []
+
+            for row in rows:
+                messaggio_id = row[0]
+                mittente_id = row[1]
+                destinatario_id = row[2]
+                descrizione = row[3]
+                timestamp = row[4]
+
+                # Recupera i dettagli del mittente
+                self.db.cursor.execute("SELECT * FROM utenti WHERE id = ?", (mittente_id,))
+                mittente_data = self.db.cursor.fetchone()
+
+                if mittente_data is None:
+                    print(f"Errore: Nessun utente trovato con ID {mittente_id}.")
+                    continue
+
+                mittente = self.crea_utente(mittente_data)
+
+                # Recupera i dettagli del destinatario
+                self.db.cursor.execute("SELECT * FROM utenti WHERE id = ?", (destinatario_id,))
+                destinatario_data = self.db.cursor.fetchone()
+
+                if destinatario_data is None:
+                    print(f"Errore: Nessun utente trovato con ID {destinatario_id}.")
+                    continue
+
+                destinatario = self.crea_utente(destinatario_data)
+
+                # Crea l'oggetto Messaggio
+                messaggio = Messaggio(descrizione, destinatario, mittente, timestamp)
+                messaggio.set_id(messaggio_id)
+                messaggi.append(messaggio)
+
+            print(f"Messaggi caricati: {len(messaggi)}")
+            return messaggi
+
+        except sqlite3.Error as e:
+            print(f"Errore durante il caricamento dei messaggi: {e}")
+            return []
+
+    def crea_utente(self, utente_data):
+        from model.fisioterapista import Fisioterapista
+        from model.paziente import Paziente
+        user_id, nome, email, password, tipo = utente_data
+
+        if tipo == "fisioterapista":
+            utente = Fisioterapista(nome,email,password)
+            utente.set_id(user_id)
+            return utente
+        elif tipo == "paziente":
+            utente= Paziente(nome, email, password)
+            utente.set_id(user_id)
+            return utente
+        else:
+            raise ValueError(f"Tipo di utente sconosciuto: {tipo}")
+        
+    def salva_messaggio(self, messaggio, mittente_id, destinatario_id):
+        self.db.cursor.execute('''
+            INSERT INTO messaggi (mittente_id, destinatario_id, messaggio)
+            VALUES (?, ?, ?)
+        ''', (mittente_id, destinatario_id, messaggio.get_descrizione()))
+        self.db.conn.commit()

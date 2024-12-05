@@ -90,6 +90,11 @@ class GestoreEsercizi:
                self.lista_esercizi_assegnati.remove(esercizio)
                print("Gestore", esercizio)
                GestoreDati().rimuovi_esercizio_assegnato(esercizio.get_id())
+               
+    def get_esercizio(self, titolo):
+        for esercizio in self.lista_esercizi_assegnati:
+            if esercizio.get_titolo() == titolo:
+                return esercizio
 
 
 

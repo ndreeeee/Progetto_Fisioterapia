@@ -38,7 +38,7 @@ class FisioterapistaView(tk.Frame):
         self.mostra_esercizi_button = ttk.Button(self.main_frame, text="Lista Esercizi", command=lambda: MostraListaEsercizi(self.root, self.fisioterapista, self.gestoreEsercizi), width=20, style='TButton')
         self.mostra_esercizi_button.pack(pady=20, ipadx=20, ipady=10)
         
-        self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, self.fisioterapista, self.gestore), width=20, style='TButton')
+        self.messaggia_paziente_button = ttk.Button(self.main_frame, text="Messaggia Paziente", command=lambda: CercaPazienteView(1, self.root, self.fisioterapista, self.gestore, self.gestoreEsercizi), width=20, style='TButton')
         self.messaggia_paziente_button.pack(pady=20, ipadx=20, ipady=10)
 
         self.prenotazione_button = ttk.Button(self.main_frame, text="Prenotazioni", command=lambda: PrenotazioniFisio(self.root, self.fisioterapista, self.gestore), width=20, style='TButton')

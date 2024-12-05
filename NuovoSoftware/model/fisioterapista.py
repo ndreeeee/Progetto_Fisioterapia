@@ -21,6 +21,10 @@ class Fisioterapista(Utente):
         return risultati
     
     
+    def __repr__(self):
+        return f"Fisio (id = {self.id}, nome={self.nome}, email={self.email}, password= {self.password})"
+    
+    
             
     
             
@@ -28,29 +32,7 @@ class Fisioterapista(Utente):
         
                 
     
-    def aggiungi_nuovo_esercizio(self, titolo, descrizione, video_url):
-        for esercizio in self.lista_esercizi:
-            if esercizio.titolo == titolo:
-                messagebox.showerror("Errore", "Questo esercizio è stato già inserito")
-                return      
-        exercise = Esercizio(titolo, descrizione, video_url)
-        self.lista_esercizi.append(exercise)
-          # Save after adding exercise
-        messagebox.showinfo("Successo", "Esercizio inserito con successo!")
-        
-   
-        
 
-        
-
-            
-    
-            
-    def aggiungi_esercizio_paziente(self, paziente1, esercizio):
-        for paziente in self.lista_pazienti:
-            if paziente1 == paziente:
-                esercizio_assegnato = EsercizioAssegnato(esercizio.titolo, esercizio.descrizione, esercizio.video)
-                paziente.add_esercizio(esercizio_assegnato)
                 
                 
     

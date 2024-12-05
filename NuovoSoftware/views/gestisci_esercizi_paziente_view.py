@@ -31,8 +31,8 @@ class GestisciEsercizi:
                 print(f"Titolo: {esercizio.get_titolo()}, Descrizione: {esercizio.get_descrizione()}")
  
         
-        stato_esercizio = ttk.Label(esercizi_window, text="", font=("Arial", 14), cursor="hand2")
-        stato_esercizio.pack(pady=10)
+        self.stato_esercizio = ttk.Label(esercizi_window, text="", font=("Arial", 14), cursor="hand2")
+        self.stato_esercizio.pack(pady=10)
 
         ttk.Button(esercizi_window, text="Aggiungi Esercizio",
                 command=lambda: self.aggiungi_esercizio_al_paziente(self.paziente),
@@ -43,13 +43,14 @@ class GestisciEsercizi:
                                     style="TButton")
         rimuovi_button.pack(pady=10, ipadx=10, ipady=5)
 
-                
+        self.esercizi_listbox.bind("<<ListboxSelect>>", self.mostra_stato_esercizio)
+
         """
         if self.controller.db.ottieni_stato_esercizio(id_paziente, id_esercizio) == 'completato':
             stato_esercizio.config(text="Il paziente ha completato l'esercizio", cursor="hand2", foreground="green")
         else:
-            stato_esercizio.config(text="Il paziente NON ha ancora completato l'esercizio", cursor="hand2", foreground="red")
-            """
+            stato_esercizio.config(text="Il paziente NON ha ancora completato l'esercizio", cursor="hand2", foreground="red")"""
+            
 
     def rimuovi_esercizio_al_paziente(self):
         selezione = self.esercizi_listbox.curselection()
@@ -69,6 +70,23 @@ class GestisciEsercizi:
                 messagebox.showinfo("Successo", "L'esercizio è stato rimosso con successo.")
         else:
             messagebox.showerror("Errore", "Seleziona un esercizio da rimuovere.")
+            
+            
+    def mostra_stato_esercizio(self, event):
+        selezione = self.esercizi_listbox.curselection()
+        if selezione:
+            esercizio_selezionato = self.esercizi_listbox.get(selezione[0])
+            titolo_esercizio = esercizio_selezionato.split("-")[0].strip()
+
+            # Ottieni lo stato dell'esercizio
+            esercizio = self.gestoreEsercizi.get_esercizio(titolo_esercizio)
+            stato = esercizio.get_stato()
+
+            # Aggiorna l'etichetta dello stato
+            if stato == "completato":
+                self.stato_esercizio.config(text="Questo esercizio è stato completato.", foreground="green")
+            else:
+                self.stato_esercizio.config(text="Questo esercizio NON è stato completato.", foreground="red")
             
                 
     

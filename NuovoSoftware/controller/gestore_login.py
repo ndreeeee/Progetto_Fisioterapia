@@ -17,6 +17,10 @@ class GestoreLogin:
         from model.paziente import Paziente
         
         for utente in self.lista_utenti:
+            if isinstance(utente, Fisioterapista):
+                self.fisioterapista = utente
+        
+        for utente in self.lista_utenti:
             if utente.email == email and utente.password == password:
                 root.destroy()  
                 root = tk.Tk()  
@@ -36,6 +40,6 @@ class GestoreLogin:
                     gestore.set_esercizi_assegnati(GestoreDati().get_esercizi_assegnati())
                     gestore.set_cartella(GestoreDati().get_cartella_clinica_utente(utente.get_id()))
                     from views.paziente_view import PazienteView
-                    PazienteView(root, utente, gestore)  
+                    PazienteView(root, utente, gestore, self.fisioterapista)  
                 return
         messagebox.showerror("Errore", "Credenziali errate. Riprova.")
