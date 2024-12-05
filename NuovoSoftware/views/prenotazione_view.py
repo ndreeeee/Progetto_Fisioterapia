@@ -8,16 +8,18 @@ class PrenotazioniView(tk.Toplevel):
     
     
     
-    def __init__(self, root, paziente, posti_disponibili, gestore_dati):
+    def __init__(self, root, paziente, gestore, gestorePrenotazioni):
         super().__init__(root)
         self.root = root
         self.title("Prenotazioni disponibili")
         self.geometry("900x700")  
-        self.posti_disponibili = posti_disponibili
-        self.gestore_dati = gestore_dati
-        
+        self.gestorePrenotazioni = gestorePrenotazioni
+        self.gestore = gestore
         self.paziente = paziente
-        self.posti_prenotati = paziente.get_prenotazioni()
+        
+        self.posti_disponibili = self.gestorePrenotazioni.get_prenotazioni_disponibili()
+        
+        self.posti_prenotati = self.gestore.get_prenotazioni(paziente.get_id())
         
         
 
@@ -57,51 +59,56 @@ class PrenotazioniView(tk.Toplevel):
             self.prenotazioni_lista.delete(item)
     
         for prenotazione in disponibili:
-            print(prenotazione)
-            self.prenotazioni_lista.insert('', 'end', values=(prenotazione.codice, 
-                                                              prenotazione.data_e_ora, prenotazione.stato))
+            self.prenotazioni_lista.insert('', 'end', values=(prenotazione.get_id(), 
+                                                              prenotazione.get_data_e_ora(), prenotazione.get_stato()))
 
     def carica_prenotazioni_effettuate(self, prenotati):
         for item in self.prenotazioni_effettuate_lista.get_children():
             self.prenotazioni_effettuate_lista.delete(item)
 
         for prenotazione in prenotati:
-            self.prenotazioni_effettuate_lista.insert('', 'end', values=(prenotazione.codice, 
-                                                                        prenotazione.data_e_ora, 
-                                                                        prenotazione.stato))
+            self.prenotazioni_effettuate_lista.insert('', 'end', values=(prenotazione.get_id(), 
+                                                                        prenotazione.get_data_e_ora(), 
+                                                                        prenotazione.get_stato()))
 
-            
     def prenota(self):
-        # Ottieni l'elemento selezionato
         selected_item = self.prenotazioni_lista.selection()
         if not selected_item:
             messagebox.showerror("Errore", "Seleziona una prenotazione")
             return
 
-        # Ottieni i valori della riga selezionata
         prenotazione_valori = self.prenotazioni_lista.item(selected_item)['values']
-        codice_selezionato = prenotazione_valori[0]  # Supponendo che il codice sia il primo valore
-        
-        # Trova l'oggetto Prenotazione corrispondente
+        codice_selezionato = prenotazione_valori[0] 
+
         prenotazione_da_prenotare = next(
-            (p for p in self.posti_disponibili if p.codice == codice_selezionato),
+            (p for p in self.posti_disponibili if p.get_id() == codice_selezionato),
             None
         )
-        
+
         if not prenotazione_da_prenotare:
             messagebox.showerror("Errore", "Prenotazione non trovata!")
             return
 
         try:
-            self.paziente.prenota(prenotazione_da_prenotare)
+            # Cambia lo stato della prenotazione e associa il paziente
+            prenotazione_da_prenotare.stato = "prenotato"
+            prenotazione_da_prenotare.paziente = self.paziente
+
+            # Salva il cambiamento nel database
+            self.gestorePrenotazioni.prenota(prenotazione_da_prenotare)
+
+            # Aggiorna le liste in memoria
             self.posti_disponibili.remove(prenotazione_da_prenotare)
-            
+            self.posti_prenotati.append(prenotazione_da_prenotare)
+
+            # Aggiorna le viste
             self.carica_prenotazioni_disponibili(self.posti_disponibili)
             self.carica_prenotazioni_effettuate(self.posti_prenotati)
 
             messagebox.showinfo("Successo", "Prenotazione avvenuta con successo!")
         except Exception as e:
             messagebox.showerror("Errore", str(e))
+
             
             
     def cancella_prenotazione_effettuata(self):
@@ -114,14 +121,14 @@ class PrenotazioniView(tk.Toplevel):
         codice_selezionato = prenotazione[0]
         
         prenotazione_da_eliminare = next(
-            (p for p in self.posti_prenotati if p.codice == codice_selezionato),
+            (p for p in self.posti_prenotati if p.get_id() == codice_selezionato),
             None
         )
 
         risposta = messagebox.askyesno("Conferma", "Sei sicuro di voler cancellare la prenotazione?")
         if risposta:
             try:
-                self.paziente.elimina_prenotazione(prenotazione_da_eliminare)
+                self.gestorePrenotazioni.elimina_prenotazione(prenotazione_da_eliminare)
 
                 self.prenotazioni_effettuate_lista.delete(selected_item)
                 self.posti_disponibili.append(prenotazione_da_eliminare)

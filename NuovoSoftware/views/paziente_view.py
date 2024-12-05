@@ -5,6 +5,7 @@ from views.cartella_clinica_paziente_view import CartellaClinicaPaziente
 from views.prenotazione_view import PrenotazioniView
 from views.messaggi_view import MessaggiView 
 from views.mostra_esercizi_assegnati_paziente_view import MostraEserciziAssegnatiView
+from controller.gestore_prenotazioni import GestorePrenotazioni
 
 
 
@@ -16,6 +17,7 @@ class PazienteView(tk.Frame):
         self.paziente = paziente
         self.gestore = gestore
         self.fisioterapista = fisioterapista
+        self.gestorePrenotazioni = GestorePrenotazioni()
         
         self.main_frame = tk.Frame(self.root, width=900, height=700)
         self.main_frame.pack_propagate(False) 
@@ -51,7 +53,7 @@ class PazienteView(tk.Frame):
         self.cartella_clinica_btn = ttk.Button(self.main_frame, text="Cartella Clinica", command= lambda: CartellaClinicaPaziente(self.root, self.paziente, self.gestore), width=20, style='TButton')
         self.cartella_clinica_btn.pack(pady=20, ipadx=20, ipady=10)
         
-        self.messaggi_btn = ttk.Button(self.main_frame, text="Prenotazione", command=lambda: PrenotazioniView(self.root, self.paziente, self.gestore), width=20, style='TButton')
+        self.messaggi_btn = ttk.Button(self.main_frame, text="Prenotazione", command=lambda: PrenotazioniView(self.root, self.paziente, self.gestore, self.gestorePrenotazioni), width=20, style='TButton')
         self.messaggi_btn.pack(pady=20, ipadx=20, ipady=10)
         
         self.messaggi_btn = ttk.Button(self.main_frame, text="Messaggi", command=lambda: MessaggiView(tk.Tk(), self.paziente,self.fisioterapista, 0), width=20, style='TButton')
@@ -72,6 +74,5 @@ class PazienteView(tk.Frame):
         
         
 
-        print("Interfaccia creata con successo")  # Debug per vedere se la GUI è stata creata correttamente
 
     

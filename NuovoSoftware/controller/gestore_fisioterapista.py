@@ -7,7 +7,11 @@ class GestoreFisioterapista:
     def __init__(self):
         self.lista_pazienti = []
         self.cartelle_cliniche = []
+        self.prenotazioni = GestoreDati().get_prenotazioni_effettuate()
         
+        
+    def get_prenotazioni (self):
+        return self.prenotazioni
     
     def set_lista_pazienti(self, lista_pazienti):
         self.lista_pazienti = lista_pazienti

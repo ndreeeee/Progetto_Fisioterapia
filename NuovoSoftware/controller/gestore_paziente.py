@@ -4,6 +4,23 @@ class GestorePaziente():
     def __init__(self):
         self.lista_esercizi_assegnati = []
         self.cartella_clinica = None
+        self.prenotazioni = []
+        
+    
+    
+                
+    def elimina_prenotazione (self, prenotazione1):
+        for prenotazione in self.prenotazioni:
+            if prenotazione == prenotazione1:
+                prenotazione.set_stato("disponibile")
+                GestoreDati().elimina_prenotazione(prenotazione)
+
+        
+    
+    def get_prenotazioni(self, id):
+        self.prenotazioni = GestoreDati().get_prenotazioni_per_paziente(id)
+        return self.prenotazioni
+    
         
     def get_esercizi_assegnati(self, paziente):
         self.lista_esercizi_assegnati

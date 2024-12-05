@@ -8,12 +8,8 @@ from model.cartella_clinica import CartellaClinica
 class Paziente(Utente):
 
     def __init__(self, nome, email, password):
-        
         super().__init__(nome, email, password)
         
-      
-    
-  
     def set_cartella_clinica(self,cartella):
         self.cartella_clinica = cartella
         
@@ -33,7 +29,5 @@ class Paziente(Utente):
         
 
     
-
-        
     def __repr__(self):
         return f"Paziente (id = {self.id}, nome={self.nome}, email={self.email}, password= {self.password})"

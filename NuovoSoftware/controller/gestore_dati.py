@@ -151,26 +151,110 @@ class GestoreDati:
         self.db.conn.commit()
 
     
-    def carica_prenotazioni (self):
+    def carica_prenotazioni(self):
         from model.prenotazione import Prenotazione
-        from model.paziente import Paziente
         
-        self.db.cursor.execute ("SELECT * FROM prenotazioni")
-        rows = self.db.cursor.fetchall()
-        
+        self.db.cursor.execute('SELECT id, data_ora, id_paziente, stato FROM prenotazioni')
         prenotazioni = []
-        
-        for row in rows:
+        for row in self.db.cursor.fetchall():
+            id_prenotazione = row[0]
+            data_ora = row[1]
+            id_paziente = row[2]
+            stato = row[3]
             
-            self.db.cursor.execute('SELECT * FROM utenti WHERE id = ?', (row[0],))
-            dati = self.db.cursor.fetchone()
-            
-            paziente = Paziente(dati[1], dati [2], dati[3])
-            
-            prenotazione = Prenotazione(row[3], paziente)
-            
+            # Cerca il paziente solo se esiste un id_paziente (non NULL)
+            paziente = None
+            if id_paziente:
+                paziente = self.get_paziente_by_id(id_paziente)
+
+            prenotazione = Prenotazione(data_ora, paziente)
+            prenotazione.set_id(id_prenotazione)
+            prenotazione.set_stato(stato)
             prenotazioni.append(prenotazione)
+
+        return prenotazioni
+    
+    def get_prenotazioni_effettuate(self):
+        from model.prenotazione import Prenotazione
         
+        self.db.cursor.execute('SELECT id, data_ora, id_paziente, stato FROM prenotazioni WHERE stato = "prenotato"')
+        prenotazioni = []
+        for row in self.db.cursor.fetchall():
+            id_prenotazione = row[0]
+            data_ora = row[1]
+            id_paziente = row[2]
+            stato = row[3]
+            
+            # Cerca il paziente solo se esiste un id_paziente (non NULL)
+            paziente = None
+            if id_paziente:
+                paziente = self.get_paziente_by_id(id_paziente)
+
+            prenotazione = Prenotazione(data_ora, paziente)
+            prenotazione.set_id(id_prenotazione)
+            prenotazione.set_stato(stato)
+            prenotazioni.append(prenotazione)
+
+        return prenotazioni
+    
+    
+    def salva_prenotazioni(self, prenotazioni):
+        for prenotazione in prenotazioni:
+            try:
+                # Verifica se la prenotazione esiste già nel DB
+                self.db.cursor.execute(
+                    "SELECT COUNT(*) FROM prenotazioni WHERE data_ora = ?", (prenotazione.get_data_e_ora(),)
+                )
+                esiste = self.db.cursor.fetchone()[0]
+
+                if esiste == 0:
+                    # Inserisce la nuova prenotazione
+                    self.db.cursor.execute(
+                        "INSERT INTO prenotazioni (data_ora, stato) VALUES (?, ?)",
+                        (prenotazione.get_data_e_ora(), prenotazione.get_stato())
+                    )
+            except Exception as e:
+                print(f"Errore durante il salvataggio della prenotazione: {e}")
+
+        self.db.conn.commit()  # Conferma le modifiche al database
+        
+    def prenota(self, prenotazione):
+        paziente = prenotazione.get_paziente()
+        id_paziente = paziente.get_id()
+        self.db.cursor.execute('''
+            UPDATE prenotazioni
+            SET  stato = ?, id_paziente = ?
+            WHERE id = ?
+        ''', (prenotazione.get_stato(), id_paziente, prenotazione.get_id()))
+        self.db.conn.commit()
+        
+    def elimina_prenotazione(self, prenotazione):
+        paziente = prenotazione.get_paziente()
+        id_paziente = paziente.get_id()
+        self.db.cursor.execute('''
+            UPDATE prenotazioni
+            SET  stato = ?, id_paziente = NULL
+            WHERE id = ?
+        ''', (prenotazione.get_stato(), prenotazione.get_id()))
+        self.db.conn.commit()
+   
+    
+    def get_prenotazioni_per_paziente(self, id_paziente):
+        from model.prenotazione import Prenotazione
+        self.db.cursor.execute('SELECT id, data_ora, stato FROM prenotazioni WHERE id_paziente = ?', (id_paziente,))
+        prenotazioni = []
+        for row in self.db.cursor.fetchall():
+            id_prenotazione = row[0]
+            data_ora = row[1]
+            stato = row[2]
+            
+            # Crea un oggetto Prenotazione con i dati
+            paziente = self.get_paziente_by_id(id_paziente)
+            prenotazione = Prenotazione(data_ora, paziente)
+            prenotazione.set_id(id_prenotazione)
+            prenotazione.set_stato(stato) 
+            prenotazioni.append(prenotazione)
+
         return prenotazioni
     
     

@@ -4,10 +4,10 @@ from tkinter import messagebox
 
 
 class PrenotazioniFisio():
-    def __init__(self, root, fisioterapista, gestore_dati):
+    def __init__(self, root, fisioterapista, gestore):
         self.root = root
         self.fisioterapista = fisioterapista
-        self.gestore_dati = gestore_dati
+        self.gestore = gestore
         
         prenotazioni_window = tk.Toplevel(self.root)
         prenotazioni_window.title("Gestisci Prenotazioni")
@@ -29,7 +29,7 @@ class PrenotazioniFisio():
         self.results_listbox.config(yscrollcommand=self.scrollbar.set)
         self.scrollbar.config(command=self.results_listbox.yview)
 
-        prenotazioni = self.fisioterapista.lista_prenotazioni
+        prenotazioni = self.gestore.get_prenotazioni()
 
         self.results_listbox.delete(0, tk.END)
 
@@ -39,17 +39,23 @@ class PrenotazioniFisio():
             for prenotazione in prenotazioni:
                 self.results_listbox.insert(
                     tk.END, 
-                    f"ID-prenotazione: {prenotazione.codice}, Paziente: {prenotazione.paziente.nome}, Data: {prenotazione.data_e_ora}"
+                    f"ID-prenotazione: {prenotazione.get_id()}, Paziente: {prenotazione.get_paziente().get_nome()}, Data: {prenotazione.get_data_e_ora()}"
                 )
-        
-        remove_button = ttk.Button(prenotazioni_window, text="Rimuovi Prenotazione", command=self.rimuovi_prenotazione)
-        remove_button.pack(pady=10)
-        
+                
         back_button = ttk.Button(prenotazioni_window, text="Torna Indietro", command=prenotazioni_window.destroy, style="TButton")
         back_button.pack(pady=20, ipadx=10, ipady=5)
-
-        remove_button.config(width=20)
         
+        
+        
+        
+        
+        #remove_button = ttk.Button(prenotazioni_window, text="Rimuovi Prenotazione", command=self.rimuovi_prenotazione)
+        #remove_button.pack(pady=10)
+        
+        
+
+        #remove_button.config(width=20)
+    """   
     def rimuovi_prenotazione(self):
         selezione = self.results_listbox.curselection()
         if selezione:
@@ -63,4 +69,4 @@ class PrenotazioniFisio():
 
             messagebox.showinfo("Successo", "Prenotazione rimossa con successo.")
         else:
-            messagebox.showerror("Errore", "Seleziona una prenotazione da rimuovere.")
+            messagebox.showerror("Errore", "Seleziona una prenotazione da rimuovere.")"""
