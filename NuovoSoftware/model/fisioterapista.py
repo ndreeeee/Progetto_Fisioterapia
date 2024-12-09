@@ -1,8 +1,5 @@
-from tkinter import messagebox
-from controller.gestore_dati import GestoreDati
 from model.utente import Utente
-from model.esercizio import Esercizio
-from model.esercizio_assegnato import EsercizioAssegnato
+
 
 
 

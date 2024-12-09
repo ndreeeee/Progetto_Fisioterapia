@@ -1,6 +1,7 @@
 from controller.gestore_dati import GestoreDati
 from model.paziente import Paziente
 from model.cartella_clinica import CartellaClinica
+from datetime import datetime, timedelta
 from tkinter import messagebox
 
 class GestoreFisioterapista:
@@ -8,6 +9,7 @@ class GestoreFisioterapista:
         self.lista_pazienti = []
         self.cartelle_cliniche = []
         self.prenotazioni = GestoreDati().get_prenotazioni_effettuate()
+        self.elimina_prenotazioni_scadute()
         
         
     def get_prenotazioni (self):
@@ -85,6 +87,18 @@ class GestoreFisioterapista:
         cartella = paziente.get_cartella_clinica()
         paziente.aggiorna_cartella(descrizione)
         GestoreDati().modifica_cartella(cartella.get_id(), descrizione)
+        
+        
+    def elimina_prenotazioni_scadute(self):
+     
+        ora_attuale = datetime.now()
+        prenotazioni_da_rimuovere = [
+                p for p in self.prenotazioni
+                if datetime.strptime(p.data_e_ora, '%Y-%m-%d %H:%M') < ora_attuale
+            ]
+        
+        for p in prenotazioni_da_rimuovere:
+            self.prenotazioni.remove(p)
         
         
         

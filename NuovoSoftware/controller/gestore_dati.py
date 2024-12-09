@@ -10,7 +10,7 @@ class GestoreDati:
     
     def inserisci_esercizio(self, titolo, descrizione, video):
         self.db.cursor.execute('''
-                INSERT INTO esercizi (titolo, descrizione, video)
+                INSERT INTO esercizi (titolo, descrizione, video_url)
                 VALUES (?, ?, ?)
             ''', (titolo, descrizione, video))
         self.db.conn.commit()

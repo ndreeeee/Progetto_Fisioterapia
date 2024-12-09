@@ -4,6 +4,7 @@ from views.cerca_paziente_view import CercaPazienteView
 from views.aggiungi_paziente_view import AggiungiPazienteView
 from views.mostra_lista_esercizi_view import MostraListaEsercizi
 from views.prenotazioni_fisio_view import PrenotazioniFisio
+from backup import backup_database
 
 
 
@@ -46,8 +47,8 @@ class FisioterapistaView(tk.Frame):
         
 
         
-        #self.esegui_backup_ = ttk.Button(self.main_frame, text="Esegui Backup", command=self.controller.esegui_backup, width=20, style='TButton')
-        #self.esegui_backup_.pack(pady=20, ipadx=20, ipady=10)
+        self.esegui_backup_ = ttk.Button(self.main_frame, text="Esegui Backup", command=lambda: backup_database(), width=20, style='TButton')
+        self.esegui_backup_.pack(pady=20, ipadx=20, ipady=10)
 
      
         style = ttk.Style()

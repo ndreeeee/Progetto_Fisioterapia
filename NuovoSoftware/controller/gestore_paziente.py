@@ -51,7 +51,6 @@ class GestorePaziente():
         for esercizio_assegnato in self.lista_esercizi_assegnati:
             if esercizio == esercizio_assegnato:
                 esercizio_assegnato.set_stato(stato)
-                print("gestore", esercizio_assegnato.get_stato())
                 GestoreDati().aggiorna_stato(paziente, esercizio, stato)
                 
     def get_fisioterapista(self):

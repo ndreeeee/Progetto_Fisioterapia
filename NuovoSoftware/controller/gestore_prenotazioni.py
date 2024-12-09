@@ -7,6 +7,7 @@ class GestorePrenotazioni:
     def __init__(self):
         self.prenotazioni = GestoreDati().carica_prenotazioni()
         self.aggiorna_prenotazioni_future(giorni_in_avanti=7)
+        self.elimina_prenotazioni_scadute()
        
 
     
@@ -87,8 +88,10 @@ class GestorePrenotazioni:
     def elimina_prenotazioni_scadute(self):
      
         ora_attuale = datetime.now()
-        prenotazioni_da_rimuovere = [p for p in self.prenotazioni if p.data_e_ora < ora_attuale]
-
-        # Rimuove le prenotazioni scadute dalla lista
+        prenotazioni_da_rimuovere = [
+                p for p in self.prenotazioni
+                if datetime.strptime(p.data_e_ora, '%Y-%m-%d %H:%M') < ora_attuale
+            ]
+        
         for p in prenotazioni_da_rimuovere:
             self.prenotazioni.remove(p)
