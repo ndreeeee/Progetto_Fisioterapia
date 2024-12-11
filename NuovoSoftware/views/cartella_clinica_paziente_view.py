@@ -16,7 +16,7 @@ class CartellaClinicaPaziente:
         cartella_window.title("Cartella Clinica")
         cartella_window.geometry("900x700")
 
-        cartella_clinica = self.gestore.get_cartella()
+        cartella_clinica = self.paziente.get_cartella_clinica()
 
         if cartella_clinica:
             cartella_info = f"{cartella_clinica.get_descrizione()}"

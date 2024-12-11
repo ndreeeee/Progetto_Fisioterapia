@@ -86,7 +86,7 @@ class MostraListaEsercizi:
         search_text = self.search_entry.get().lower()
         if search_text:
             
-            risultati = self.fisioterapista.cerca_esercizio(search_text)
+            risultati = self.gestoreEsercizi.cerca_esercizio(search_text)
             self.listbox.delete(0, tk.END)
         
             if risultati:
@@ -100,7 +100,7 @@ class MostraListaEsercizi:
         else:
             self.listbox.delete(0,tk.END)
 
-            for esercizio in self.fisioterapista.lista_esercizi:
+            for esercizio in self.gestoreEsercizi.lista_esercizi:
                 self.listbox.insert(tk.END, f"{esercizio.titolo}")
 
     def rimuovi_esercizio_lista(self, listbox):

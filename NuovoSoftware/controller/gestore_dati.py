@@ -55,22 +55,43 @@ class GestoreDati:
     def carica_utenti(self):
         from model.fisioterapista import Fisioterapista
         from model.paziente import Paziente
-        self.db.cursor.execute("SELECT * FROM utenti")
+        from model.cartella_clinica import CartellaClinica
+
+        query = '''
+            SELECT 
+                utenti.id,
+                utenti.nome,
+                utenti.email,
+                utenti.password,
+                utenti.tipo,
+                cartella_clinica.descrizione AS descrizione_cartella
+            FROM utenti
+            LEFT JOIN cartella_clinica ON utenti.id = cartella_clinica.id_paziente;
+        '''
+        
+        self.db.cursor.execute(query)
         rows = self.db.cursor.fetchall()
         utenti = []
 
         for row in rows:
-            # Crea l'oggetto utente in base al tipo
+            # Determina il tipo di utente
             if row[4] == 'fisioterapista':
                 utente = Fisioterapista(row[1], row[2], row[3])
             elif row[4] == 'paziente':
                 utente = Paziente(row[1], row[2], row[3])
                 
+                # Associa la cartella clinica se presente
+                descrizione_cartella = row[5]
+                if descrizione_cartella:
+                    cartella = CartellaClinica(descrizione_cartella)
+                    cartella.set_id(row[0])  # Usa lo stesso ID del paziente
+                    utente.set_cartella_clinica(cartella)
+
             utente.set_id(row[0])
             utenti.append(utente)
-        
-        
+
         return utenti
+
     
     def carica_pazienti(self):
         from model.paziente import Paziente

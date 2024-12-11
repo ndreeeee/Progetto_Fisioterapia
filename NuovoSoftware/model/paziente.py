@@ -9,7 +9,8 @@ class Paziente(Utente):
 
     def __init__(self, nome, email, password):
         super().__init__(nome, email, password)
-        
+        self.cartella_clinica = None
+            
     def set_cartella_clinica(self,cartella):
         self.cartella_clinica = cartella
         

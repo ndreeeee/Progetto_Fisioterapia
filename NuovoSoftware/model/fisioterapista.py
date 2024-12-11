@@ -8,14 +8,7 @@ class Fisioterapista(Utente):
         super().__init__(nome, email, password)
         
         
-    def cerca_esercizio (self, query):
-        
-        risultati = [
-            esercizio for esercizio in self.lista_esercizi
-            if query.lower() in esercizio.titolo.lower()
-        ]
-        
-        return risultati
+
     
     
     def __repr__(self):

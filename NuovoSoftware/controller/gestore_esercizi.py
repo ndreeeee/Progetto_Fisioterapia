@@ -66,6 +66,15 @@ class GestoreEsercizi:
         ]
         return esercizi_filtrati
     
+    def cerca_esercizio (self, query):
+        
+        risultati = [
+            esercizio for esercizio in self.lista_esercizi
+            if query.lower() in esercizio.titolo.lower()
+        ]
+        
+        return risultati
+    
     
     
     def aggiungi_esercizio_assegnato(self, paziente, esercizio):
