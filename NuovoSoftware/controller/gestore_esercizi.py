@@ -25,7 +25,7 @@ class GestoreEsercizi:
             window.destroy()
             messagebox.showinfo("Success", "Esercizio aggiunto con successo!!!")
         else:
-            messagebox.showerror("Errore", "Tutti i campi sono obbligatori!")
+            messagebox.showerror("Errore", "Tutti i campi sono obbligatori!!")
             
     def elimina_esercizio(self, titolo):
         for esercizio in self.lista_esercizi:
