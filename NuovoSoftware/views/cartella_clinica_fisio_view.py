@@ -16,12 +16,12 @@ class CartellaClinicaFisio:
         cartella_clinica = self.paziente.get_cartella_clinica()
 
         if cartella_clinica:
-            cartella_info = f"{cartella_clinica.descrizione}"
-            informazioni_label = ttk.Label(cartella_window, text="Cartella Clinica del Paziente" + f"{paziente.nome}", font=("Arial", 14))
+            cartella_info = f"{cartella_clinica.get_descrizione()}"
+            informazioni_label = ttk.Label(cartella_window, text="Cartella Clinica del Paziente " + f"{paziente.nome}", font=("Arial", 14))
             informazioni_label.pack(pady=10)
         else:
             cartella_info = "Il paziente non ha ancora una cartella clinica."
-            informazioni_label = ttk.Label(cartella_window, text="Cartella Clinica del Paziente" + f"{paziente.nome}", font=("Arial", 14))
+            informazioni_label = ttk.Label(cartella_window, text="Cartella Clinica del Paziente " + f"{paziente.nome}", font=("Arial", 14))
             informazioni_label.pack(pady=10)
 
         descrizione_label = ttk.Label(cartella_window, text="Descrizione", font=("Arial", 14))
@@ -39,6 +39,8 @@ class CartellaClinicaFisio:
             if flag == 1:
                 try:
                     self.gestore.aggiungi_cartella_clinica(self.paziente, testo_modificato)
+                    messagebox.showinfo("Successo", "Cartella clinica aggiunta con successo.")
+
                     cartella_window.destroy
 
                 except Exception as e:

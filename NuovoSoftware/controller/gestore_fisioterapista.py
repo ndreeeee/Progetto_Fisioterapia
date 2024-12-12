@@ -77,16 +77,15 @@ class GestoreFisioterapista:
         cartella_clinica = CartellaClinica(descrizione)
         
         for paziente1 in self.lista_pazienti:
-            if paziente == paziente1:
+            if paziente.get_email() == paziente1.get_email():
                 paziente1.set_cartella_clinica(cartella_clinica)
                 GestoreDati().aggiungi_cartella(descrizione, paziente.get_id())
-                messagebox.showinfo("Successo", "Cartella Clinica aggiunta con successo!")
                 
                 
     def modifica_cartella_clinica(self, paziente, descrizione):
         cartella = paziente.get_cartella_clinica()
         paziente.aggiorna_cartella(descrizione)
-        GestoreDati().modifica_cartella(cartella.get_id(), descrizione)
+        GestoreDati().modifica_cartella(paziente.get_id(), descrizione)
         
         
     def elimina_prenotazioni_scadute(self):

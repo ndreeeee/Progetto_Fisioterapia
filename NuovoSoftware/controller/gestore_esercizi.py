@@ -59,10 +59,10 @@ class GestoreEsercizi:
         return self.lista_esercizi_assegnati
     
     def get_esercizi_assegnati_per_paziente(self, paziente):
-        # Filtra gli esercizi assegnati per l'ID del paziente
         esercizi_filtrati = [
             esercizio for esercizio in self.lista_esercizi_assegnati
-            if esercizio.get_paziente().get_id() == paziente.get_id()  # Confronta gli ID
+            if esercizio.get_paziente()
+                if esercizio.get_paziente().get_id() == paziente.get_id()  # Confronta gli ID
         ]
         return esercizi_filtrati
     

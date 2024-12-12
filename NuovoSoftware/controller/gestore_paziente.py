@@ -27,7 +27,8 @@ class GestorePaziente():
         
         esercizi_filtrati = [
             esercizio for esercizio in self.lista_esercizi_assegnati
-            if esercizio.get_paziente().get_id() == paziente.get_id()  
+            if esercizio.get_paziente()
+                if esercizio.get_paziente().get_id() == paziente.get_id()  
         ]
         return esercizi_filtrati
     

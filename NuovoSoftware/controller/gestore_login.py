@@ -9,7 +9,6 @@ class GestoreLogin:
     def __init__(self):
         self.lista_utenti = GestoreDati().carica_utenti()
         
-        print (self.lista_utenti)
     
     
     def login(self, root, email, password):

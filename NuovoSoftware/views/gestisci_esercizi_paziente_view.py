@@ -45,11 +45,6 @@ class GestisciEsercizi:
 
         self.esercizi_listbox.bind("<<ListboxSelect>>", self.mostra_stato_esercizio)
 
-        """
-        if self.controller.db.ottieni_stato_esercizio(id_paziente, id_esercizio) == 'completato':
-            stato_esercizio.config(text="Il paziente ha completato l'esercizio", cursor="hand2", foreground="green")
-        else:
-            stato_esercizio.config(text="Il paziente NON ha ancora completato l'esercizio", cursor="hand2", foreground="red")"""
             
 
     def rimuovi_esercizio_al_paziente(self):
@@ -94,7 +89,7 @@ class GestisciEsercizi:
             
             
             
-    def aggiungi_esercizio_al_paziente(self, paziente):
+    def aggiungi_esercizio_al_paziente(self):
         aggiungi_window = tk.Toplevel(self.root)
         aggiungi_window.title("Aggiungi Esercizio al Paziente")
         

@@ -122,8 +122,9 @@ class GestoreDati:
             descrizione_cartella = row[4]
             if descrizione_cartella:
                 cartella = CartellaClinica(descrizione_cartella)
-                cartella.set_id(row[0])  # Usa lo stesso ID del paziente
+                cartella.set_id(row[0])  
                 paziente.set_cartella_clinica(cartella)
+                print(f"{paziente.get_nome()} cartella -- {paziente.get_cartella_clinica().get_descrizione()}")
 
             # Aggiungi il paziente alla lista
             pazienti.append(paziente)
@@ -162,12 +163,14 @@ class GestoreDati:
                 VALUES (?, ?)
             ''', (id_paziente, descrizione))
         self.db.conn.commit()
+        print("Inserimento completato con successo")
+
         
     def modifica_cartella(self, id, descrizione):
         self.db.cursor.execute('''
             UPDATE cartella_clinica
             SET  descrizione = ?
-            WHERE id = ?
+            WHERE id_paziente = ?
         ''', (descrizione, id))
         self.db.conn.commit()
 
